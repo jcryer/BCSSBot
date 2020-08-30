@@ -8,7 +8,8 @@ router.get('/', async function(req, res) {
  // axios.post('http://localhost:3000/test2', {
  //   todo: 'Buy the milk'
  // });
-  console.log(req.query);
+  console.log(req.query.state);
+  console.log(req.query.access_token);
   res.send("200 OK");
   //res.send("Yay! home page :) - " + req.query.state);
 });
