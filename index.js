@@ -9,15 +9,16 @@ router.get('/', async function(req, res) {
   console.log(req.query.code);
   console.log(req.query.state);
   res.send("200 OK");
-  axios.post('https://discord.com/api/oauth2/token', 
-  `client_id=${"749611213406732370"}&client_secret=${"zTlQslYb63TTnfMRLlfBOSplsI3nlYby"}&grant_type=authorization_code&code=${req.query.code}&redirect_uri=http://bcss-su.herokuapp.com&scope=identify`
+  var access = await axios.post('https://discord.com/api/oauth2/token', 
+    `client_id=${"749611213406732370"}&client_secret=${"zTlQslYb63TTnfMRLlfBOSplsI3nlYby"}
+    &grant_type=authorization_code&code=${req.query.code}&redirect_uri=http://bcss-su.herokuapp.com&scope=identify`
+  );
 
-  ).then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+  console.log(access.data.access_token);
+  var user = await axios.get('https://discord.com/api/users/@me', { 'headers': {'Authorization': 'Bearer ' + access.data.access_token} });
+
+  console.log(user);
+
 /*
   axios.post('http://localhost:3000/test2', {
     todo: 'Buy the milk'
