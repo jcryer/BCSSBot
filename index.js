@@ -1,5 +1,5 @@
 express = require("express");
-axios = require("axios");
+request = require('request');
 url = require('url');
 
 router = express.Router();
@@ -9,18 +9,18 @@ router.get('/', async function(req, res) {
   console.log(req.query.code);
   console.log(req.query.state);
   res.send("200 OK");
-  axios.post('https://discord.com/api/oauth2/token', {
-    'client_id': 749611213406732370,
-    'client_secret': "zTlQslYb63TTnfMRLlfBOSplsI3nlYby",
-    'grant_type': 'authorization_code',
-    'code': req.query.code,
-    'redirect_uri': 'http://bcss-su.herokuapp.com',
-    'scope': 'identify'
-  }).then(function (response) {
+
+  request.post('https://discord.com/api/oauth2/token', {
+    form: {
+      'client_id': 749611213406732370,
+      'client_secret': "zTlQslYb63TTnfMRLlfBOSplsI3nlYby",
+      'grant_type': 'authorization_code',
+      'code': req.query.code,
+      'redirect_uri': 'http://bcss-su.herokuapp.com',
+      'scope': 'identify'
+    }
+  }, function (err, response, body) {
     console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
   });
 /*
   axios.post('http://localhost:3000/test2', {
