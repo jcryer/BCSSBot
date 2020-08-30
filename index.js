@@ -13,7 +13,7 @@ router.get('/', async function(req, res) {
     `client_id=${"749611213406732370"}&client_secret=${"zTlQslYb63TTnfMRLlfBOSplsI3nlYby"}
     &grant_type=authorization_code&code=${req.query.code}&redirect_uri=http://bcss-su.herokuapp.com&scope=identify`
   );
-
+  console.log(access);
   console.log(access.data.access_token);
   var user = await axios.get('https://discord.com/api/users/@me', { 'headers': {'Authorization': 'Bearer ' + access.data.access_token} });
 
