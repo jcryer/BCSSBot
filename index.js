@@ -10,8 +10,8 @@ router.get('/', async function(req, res) {
   console.log(req.query.state);
   res.send("200 OK");
   axios.post('https://discord.com/api/oauth2/token', 
-  `client_id=${749611213406732370}&client_secret=${"zTlQslYb63TTnfMRLlfBOSplsI3nlYby"}&grant_type=authorization_code&code=${req.query.code}&redirect_uri=http://bcss-su.herokuapp.com&scope=identify`
-  
+  `client_id=${"749611213406732370"}&client_secret=${"zTlQslYb63TTnfMRLlfBOSplsI3nlYby"}&grant_type=authorization_code&code=${req.query.code}&redirect_uri=http://bcss-su.herokuapp.com&scope=identify`
+
   ).then(function (response) {
     console.log(response);
   })
