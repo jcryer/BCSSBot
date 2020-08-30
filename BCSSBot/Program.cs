@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace BCSSBot
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args) => new Program().Run(args).GetAwaiter().GetResult();
+
+        private async Task Run(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Bot bot = new Bot();
+            await bot.RunAsync();
         }
     }
 }
