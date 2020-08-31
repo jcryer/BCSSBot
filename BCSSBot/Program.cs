@@ -24,11 +24,15 @@ namespace BCSSBot
         public Settings Settings { get; private set; }
         
         public DatabaseContextBuilder GlobalContextBuilder { get; set; }
-        
-        public static void Main(string[] args)
+
+        public static void Main(string[] args) => new Program().Run(args).GetAwaiter().GetResult();
+
+        private async Task Run(string[] args)
         {
             Program program = new Program();
             program.Start();
+            Bot bot = new Bot();
+            await bot.RunAsync();
         }
 
         private async void StartWebServer()
@@ -91,14 +95,6 @@ namespace BCSSBot
 
             IHost webHost = BuildWebHost();
             webHost.StartAsync().GetAwaiter().GetResult();
-        }
-
-        public static void Main(string[] args) => new Program().Run(args).GetAwaiter().GetResult();
-
-        private async Task Run(string[] args)
-        {
-            Bot bot = new Bot();
-            await bot.RunAsync();
         }
     }
 }
