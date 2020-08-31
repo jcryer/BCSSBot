@@ -8,7 +8,7 @@ router.get('/', async function(req, res) {
 
   console.log(req.query.code);
   console.log(req.query.state);
-  res.redirect("https://www.thesubath.com/bcss/");
+  res.send("Something's gone wrong!");
 
   axios.post('https://discord.com/api/oauth2/token', 
   `client_id=${"749611213406732370"}&client_secret=${"zTlQslYb63TTnfMRLlfBOSplsI3nlYby"}&grant_type=authorization_code&code=${req.query.code}&redirect_uri=http://bcss-su.herokuapp.com&scope=identify`  
@@ -22,12 +22,6 @@ router.get('/', async function(req, res) {
       });
     });
   });
-/*
-  axios.post('http://localhost:3000/test2', {
-    todo: 'Buy the milk'
-  });
-  res.send("Yay! home page :) - " + req.query.state);
-  */
 });
 
 module.exports = router;
