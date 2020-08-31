@@ -121,3 +121,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 .vs/BCSSBot/v16/.suo
+*.v2
