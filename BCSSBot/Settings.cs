@@ -21,7 +21,7 @@ namespace BCSSBot.API
         [JsonProperty("password")]
         public string Password { get; private set; }
         
-        public string BuildConnectionString()
+        private string BuildConnectionString()
         {
             return new NpgsqlConnectionStringBuilder
             {

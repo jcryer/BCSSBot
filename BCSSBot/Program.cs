@@ -56,19 +56,19 @@ namespace BCSSBot
         private void BuildDataBase()
         {
             var db = GlobalContextBuilder.CreateContext();
-
+            /*
             db.Users.Add(new User
             {
                 DiscordId = 0,
                 Memberships = new List<Membership>(),
                 UserHash = 123
-            });
+            });*/
             db.SaveChanges();
         }
         
         private void Start() 
         {
-            if (!File.Exists("Settings.json"))
+            if (!File.Exists("settings.json"))
             {
                 var json = JsonConvert.SerializeObject(new Settings(), Formatting.Indented);
                 File.WriteAllText("settings.json", json, new UTF8Encoding(false));

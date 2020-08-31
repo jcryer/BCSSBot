@@ -28,14 +28,18 @@ namespace BCSSBot.API.Controllers
             Console.WriteLine($"User:\n" +
                               $"userHash: {userUpdate.userHash}\n" +
                               $"discordId: {userUpdate.discordId}");
-
+            
             if (ModelState.IsValid)
             {
-                var user = db.Users.First(u => u.UserHash == userUpdate.userHash);
-                user.DiscordId = userUpdate.discordId;
-                db.Users.Update(user);
-                db.SaveChanges();
-                return Ok();
+                var user = db.Users.FirstOrDefault(u => u.UserHash == userUpdate.userHash);
+                if (user != null)
+                {
+                    user.DiscordId = userUpdate.discordId;
+                    db.Users.Update(user);
+                    db.SaveChanges();
+                    return Ok();
+                }
+                return BadRequest();
             }
             return BadRequest();
         }
