@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using ServiceDescriptor = Microsoft.Extensions.DependencyInjection.ServiceDescriptor;
+using System.Threading.Tasks;
 
 namespace BCSSBot
 {
@@ -90,6 +91,14 @@ namespace BCSSBot
 
             IHost webHost = BuildWebHost();
             webHost.StartAsync().GetAwaiter().GetResult();
+        }
+
+        public static void Main(string[] args) => new Program().Run(args).GetAwaiter().GetResult();
+
+        private async Task Run(string[] args)
+        {
+            Bot bot = new Bot();
+            await bot.RunAsync();
         }
     }
 }
