@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using BCSSBot.API.DataAccess;
 using BCSSBot.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,18 +14,30 @@ namespace BCSSBot.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        public UserController()
+        private readonly CoreContainer _coreContainer;
+        private PostgresSqlContext db;
+        public UserController(CoreContainer coreContainer)
         {
+            _coreContainer = coreContainer;
+            db = coreContainer.Program.GlobalContextBuilder.CreateContext();
         }
 
         [HttpPut]
-        public async Task<IActionResult> PutUser(long userHash, User user)
+        public IActionResult PutUser([FromBody] UserUpdate userUpdate)
         {
             Console.WriteLine($"User:\n" +
-                              $"userHash: {user.UserHash}\n" +
-                              $"discordId: {user.DiscordId}");
-            
-            return Ok();
+                              $"userHash: {userUpdate.userHash}\n" +
+                              $"discordId: {userUpdate.discordId}");
+
+            if (ModelState.IsValid)
+            {
+                var user = db.Users.First(u => u.UserHash == userUpdate.userHash);
+                user.DiscordId = userUpdate.discordId;
+                db.Users.Update(user);
+                db.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
         }
     }
 }

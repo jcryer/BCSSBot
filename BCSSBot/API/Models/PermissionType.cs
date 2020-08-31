@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace BCSSBot.API.Models
 {
-    public enum RoleType
+    public enum PermissionType
     {
         [Description("Role")]
         Role = 0,

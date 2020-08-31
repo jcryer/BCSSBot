@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Threading.Tasks;
+using BCSSBot.API.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +28,7 @@ namespace BCSSBot.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
             services.AddControllers();
         }
 
@@ -36,13 +39,9 @@ namespace BCSSBot.API
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
