@@ -7,11 +7,11 @@ namespace BCSSBot.API.Models
     {
         [Key]
         [Column("user_hash")]
-        public long UserHash { get; set; }
+        public ulong UserHash { get; set; }
         public User User { get; set; }
         [Key]
         [Column("discord_permission_id")]
-        public long DiscordId { get; set; }
+        public ulong DiscordId { get; set; }
         public Permission Permission { get; set; }
     }
 }

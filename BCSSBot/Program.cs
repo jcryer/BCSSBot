@@ -3,21 +3,19 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using BCSSBot.Database.DataAccess;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BCSSBot
 {
     public class Program
     {
-
         public delegate void WebServerWorker();
 
         public Settings Settings { get; private set; }
         
-        public DatabaseContextBuilder GlobalContextBuilder { get; set; }
-
         public Bot Bot;
 
-        public static void Main(string[] args) => new Program().Run(args).GetAwaiter().GetResult();
+        public static async void Main(string[] args)=> await new Program().Run(args);
 
         private async Task Run(string[] args)
         {
@@ -39,38 +37,41 @@ namespace BCSSBot
             
             emailSender.SendEmails(recipients, strings,subjects);
             */
-
-            Settings = Settings.getSettings();
-            
-            Start();
+            //TestDb();
+            Settings = Settings.GetSettings();
 
             Bot = new Bot();
-            await Bot.RunAsync();
+            var callbackHolder = await Bot.RunAsync();
             
             while (!Bot.IsConnected())
             {
                 continue;
             }
 
+            using IHost webHost = BuildWebHost(callbackHolder);
+            await webHost.StartAsync();
+            await Task.Delay(-1);
             /*
             Permission[] x = { new Permission() { DiscordId = 552828506036240414, Type = PermissionType.Channel }, new Permission() { DiscordId = 523960418167816196, Type = PermissionType.Channel }, new Permission() { DiscordId = 520715386488881180, Type = PermissionType.Role }, new Permission() { DiscordId = 469269411719675935, Type = PermissionType.Role } };
             Console.WriteLine(await Bot.ModifyUser(126070623855312896, x));
             */
         }
 
-        private IHost BuildWebHost()
+        private IHost BuildWebHost(CallbackHolder holder)
         {
+            var service = new ServiceDescriptor(holder.GetType(), holder);
             return Host.CreateDefaultBuilder().ConfigureWebHostDefaults(builder =>
                 {
                     builder
-                        .UseStartup<Startup>();
+                        .UseStartup<Startup>()
+                        .ConfigureServices(x => x.Add(service));
                 })
                 .Build();
         }
 
-        private void BuildDataBase()
+        private void TestDb()
         {
-            var db = GlobalContextBuilder.CreateContext();
+            var db = Settings.CreateContextBuilder().CreateContext();
             /*
             db.Users.Add(new User
             {
@@ -85,16 +86,6 @@ namespace BCSSBot
             // Console.WriteLine(String.Join("\n", db.Permissions.Select(p => $"permission: {p.DiscordId}, membersips: \n {String.Join("\n", p.Memberships.Select(m => $"\tdiscordId: {m.Permission.DiscordId}, userhash: {m.User.UserHash}"))}")));
             // Console.WriteLine(String.Join(", ", db.Users.Select(u => u.Memberships)));
             db.SaveChanges();
-        }
-        
-        private void Start() 
-        {
-            GlobalContextBuilder = Settings.CreateContextBuilder();
-            
-            BuildDataBase();
-
-            IHost webHost = BuildWebHost();
-            webHost.StartAsync().GetAwaiter().GetResult();
         }
     }
 }

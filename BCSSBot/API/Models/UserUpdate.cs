@@ -5,10 +5,10 @@ namespace BCSSBot.API.Models
     public class UserUpdate
     {
         [JsonProperty("userHash")] 
-        public long UserHash { get; set; }
+        public ulong UserHash { get; set; }
 
         [JsonProperty("discordId")] 
-        public long DiscordId { get; set; }
+        public ulong DiscordId { get; set; }
 
     }
 }

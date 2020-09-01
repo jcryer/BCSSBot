@@ -8,7 +8,7 @@ namespace BCSSBot.API.Models
     {
         [Key]
         [Column("discord_permission_id")]
-        public long DiscordId { get; set; }
+        public ulong DiscordId { get; set; }
         [Column("permission_type")]
         public PermissionType Type { get; set; }
         

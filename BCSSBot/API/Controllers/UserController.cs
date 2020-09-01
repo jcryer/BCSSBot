@@ -12,9 +12,11 @@ namespace BCSSBot.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly PostgresSqlContext _db;
-        public UserController()
+        private readonly CallbackHolder _callbackHolder;
+        public UserController(CallbackHolder callbackHolder)
         {
-            _db = Settings.getSettings().CreateContextBuilder().CreateContext();
+            _db = Settings.GetSettings().CreateContextBuilder().CreateContext();
+            _callbackHolder = callbackHolder;
         }
 
         [HttpPut]
@@ -30,10 +32,9 @@ namespace BCSSBot.API.Controllers
                 if (user != null)
                 {
                     user.DiscordId = userUpdate.DiscordId;
-                   
-                    // TODO: CHANGE
-                    //var worked = await _coreContainer.Program.Bot.ModifyUser((ulong)user.DiscordId, user.Memberships.Select(x => x.Permission).ToArray());
-                    
+
+                    _callbackHolder.Callback(user.DiscordId, user.Memberships.Select(x => x.Permission).ToArray());
+
                     _db.Users.Update(user);
                     await _db.SaveChangesAsync();
                     return Ok();

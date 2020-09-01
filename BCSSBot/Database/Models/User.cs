@@ -8,9 +8,9 @@ namespace BCSSBot.API.Models
     {
         [Key]
         [Column("user_hash")]
-        public long UserHash { get; set; }
+        public ulong UserHash { get; set; }
         [Column("discord_id")]
-        public long DiscordId { get; set; }
+        public ulong DiscordId { get; set; }
 
         public ICollection<Membership> Memberships { get; set; }
     }
