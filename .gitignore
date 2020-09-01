@@ -1,3 +1,9 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+
 # Logs
 logs
 *.log
@@ -114,3 +120,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+.vs/BCSSBot/v16/.suo
+*.v2
+.vs/BCSSBot/v16/.suo
+.vs/BCSSBot/DesignTimeBuild/.dtbcache.v2
+.vs/BCSSBot/v16/.suo
