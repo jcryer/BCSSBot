@@ -113,12 +113,12 @@ namespace BCSSBot
         {
             foreach (var role in permissions.Where(x => x.Type == PermissionType.Role))
             {
-                await member.GrantRoleAsync(guild.Roles.First(x => x.Key == (ulong)role.DiscordId).Value);
+                await member.GrantRoleAsync(guild.Roles[(ulong)role.DiscordId]);
             }
 
             foreach (var role in permissions.Where(x => x.Type == PermissionType.Channel))
             {
-                await guild.Channels.First(x => x.Key == (ulong)role.DiscordId).Value.AddOverwriteAsync(member, Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory);
+                await guild.Channels[(ulong)role.DiscordId].AddOverwriteAsync(member, Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory);
             }
         }
 

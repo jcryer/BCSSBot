@@ -15,15 +15,15 @@ namespace BCSSBot.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly CoreContainer _coreContainer;
-        private PostgresSqlContext db;
+        private readonly PostgresSqlContext _db;
         public UserController(CoreContainer coreContainer)
         {
             _coreContainer = coreContainer;
-            db = coreContainer.Program.GlobalContextBuilder.CreateContext();
+            _db = coreContainer.Program.GlobalContextBuilder.CreateContext();
         }
 
         [HttpPut]
-        public IActionResult PutUser([FromBody] UserUpdate userUpdate)
+        public async Task<IActionResult> PutUser([FromBody] UserUpdate userUpdate)
         {
             Console.WriteLine($"User:\n" +
                               $"userHash: {userUpdate.userHash}\n" +
@@ -31,21 +31,15 @@ namespace BCSSBot.API.Controllers
             
             if (ModelState.IsValid)
             {
-                var user = db.Users.FirstOrDefault(u => u.UserHash == userUpdate.userHash);
+                var user = _db.Users.FirstOrDefault(u => u.UserHash == userUpdate.userHash);
                 if (user != null)
                 {
                     user.DiscordId = userUpdate.discordId;
                    
+                    var worked = await _coreContainer.Program.Bot.ModifyUser((ulong)user.DiscordId, user.Memberships.Select(x => x.Permission).ToArray());
 
-                    var worked = _coreContainer.Program.Bot.ModifyUser((ulong)user.DiscordId, user.Memberships.Select(x => x.Permission).ToArray()).GetAwaiter().GetResult();
-
-                    if (worked)
-                    {
-                        // set flag saying the user has the roles required(?)
-                    }
-
-                    db.Users.Update(user);
-                    db.SaveChanges();
+                    _db.Users.Update(user);
+                    await _db.SaveChangesAsync();
                     return Ok();
                 }
                 return BadRequest();
