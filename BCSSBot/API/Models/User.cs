@@ -12,6 +12,6 @@ namespace BCSSBot.API.Models
         [Column("discord_id")]
         public long DiscordId { get; set; }
 
-        public virtual ICollection<Membership> Memberships { get; set; }
+        public ICollection<Membership> Memberships { get; set; }
     }
 }

@@ -8,7 +8,8 @@ namespace BCSSBot.API.DataAccess
     public class PostgresSqlContext : DbContext
     {
         public DbSet<User> Users { get; set; }
-        public DbSet<Permission> Groups { get; set; } 
+        public DbSet<Permission> Permissions { get; set; } 
+        public DbSet<Membership> Memberships { get; set; }
         
         private string ConnectionString { get; }
         public PostgresSqlContext(string connectionString)
@@ -26,17 +27,17 @@ namespace BCSSBot.API.DataAccess
             modelBuilder.Entity<User>().ToTable("users");
             modelBuilder.Entity<Permission>().ToTable("permissions");
             modelBuilder.Entity<Membership>().ToTable("memberships")
-                .HasKey(m => new {m.userHash, m.discordId});
+                .HasKey(m => new {userHash = m.UserHash, discordId = m.DiscordId});
 
             modelBuilder.Entity<Membership>()
                 .HasOne(m => m.User)
                 .WithMany(u => u.Memberships)
-                .HasForeignKey(m => m.userHash);
+                .HasForeignKey(m => m.UserHash);
 
             modelBuilder.Entity<Membership>()
                 .HasOne(m => m.Permission)
                 .WithMany(p => p.Memberships)
-                .HasForeignKey(m => m.discordId);
+                .HasForeignKey(m => m.DiscordId);
         }
             
         public override int SaveChanges()
