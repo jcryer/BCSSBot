@@ -1,7 +1,6 @@
 using System;
-using System.Dynamic;
 
-namespace BCSSBot.API.DataAccess
+namespace BCSSBot.Database.DataAccess
 {
     public class DatabaseContextBuilder
     {

@@ -12,7 +12,7 @@ namespace BCSSBot.API.Models
         [Column("permission_type")]
         public PermissionType Type { get; set; }
         
-        public virtual ICollection<Membership> Memberships { get; }
+        public ICollection<Membership> Memberships { get; }
     }
     
 }

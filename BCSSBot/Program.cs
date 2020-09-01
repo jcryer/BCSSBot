@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using BCSSBot.API;
-using BCSSBot.API.DataAccess;
-using BCSSBot.API.Models;
+﻿using BCSSBot.API;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
-using ServiceDescriptor = Microsoft.Extensions.DependencyInjection.ServiceDescriptor;
 using System.Threading.Tasks;
+using BCSSBot.Database.DataAccess;
 
 namespace BCSSBot
 {

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using BCSSBot.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BCSSBot.API.DataAccess
+namespace BCSSBot.Database.DataAccess
 {
     public class PostgresSqlContext : DbContext
     {

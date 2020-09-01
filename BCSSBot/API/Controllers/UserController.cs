@@ -1,12 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using BCSSBot.API.DataAccess;
 using BCSSBot.API.Models;
-using Microsoft.AspNetCore.Http;
+using BCSSBot.Database.DataAccess;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BCSSBot.API.Controllers
 {
@@ -24,15 +21,15 @@ namespace BCSSBot.API.Controllers
         public async Task<IActionResult> PutUser([FromBody] UserUpdate userUpdate)
         {
             Console.WriteLine($"User:\n" +
-                              $"userHash: {userUpdate.userHash}\n" +
-                              $"discordId: {userUpdate.discordId}");
+                              $"userHash: {userUpdate.UserHash}\n" +
+                              $"discordId: {userUpdate.DiscordId}");
             
             if (ModelState.IsValid)
             {
-                var user = _db.Users.FirstOrDefault(u => u.UserHash == userUpdate.userHash);
+                var user = _db.Users.FirstOrDefault(u => u.UserHash == userUpdate.UserHash);
                 if (user != null)
                 {
-                    user.DiscordId = userUpdate.discordId;
+                    user.DiscordId = userUpdate.DiscordId;
                    
                     // TODO: CHANGE
                     //var worked = await _coreContainer.Program.Bot.ModifyUser((ulong)user.DiscordId, user.Memberships.Select(x => x.Permission).ToArray());
