@@ -8,10 +8,10 @@ namespace BCSSBot.API.Models
         [Key]
         [Column("user_hash")]
         public ulong UserHash { get; set; }
-        public User User { get; set; }
+        public virtual User User { get; set; }
         [Key]
         [Column("discord_permission_id")]
         public ulong DiscordId { get; set; }
-        public Permission Permission { get; set; }
+        public virtual Permission Permission { get; set; }
     }
 }

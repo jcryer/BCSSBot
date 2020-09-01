@@ -33,6 +33,7 @@ namespace BCSSBot.API.Controllers
                 {
                     user.DiscordId = userUpdate.DiscordId;
 
+                    Console.WriteLine(user.Memberships.Count());
                     _callbackHolder.Callback(user.DiscordId, user.Memberships.Select(x => x.Permission).ToArray());
 
                     _db.Users.Update(user);

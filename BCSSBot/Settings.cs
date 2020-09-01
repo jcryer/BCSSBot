@@ -60,6 +60,9 @@ namespace BCSSBot.API
 
         [JsonProperty("emailpassword")]
         public string EmailPassword { get; private set; }
+        
+        [JsonProperty("httpaddress")]
+        public string HttpAddress { get; private set; }
 
         private string BuildConnectionString()
         {

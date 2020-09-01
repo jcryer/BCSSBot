@@ -15,7 +15,7 @@ namespace BCSSBot
         
         public Bot Bot;
 
-        public static async void Main(string[] args)=> await new Program().Run(args);
+        public static async Task Main(string[] args)=> await new Program().Run(args);
 
         private async Task Run(string[] args)
         {
@@ -64,7 +64,9 @@ namespace BCSSBot
                 {
                     builder
                         .UseStartup<Startup>()
-                        .ConfigureServices(x => x.Add(service));
+                        .ConfigureServices(x => x.Add(service))
+                        .UseUrls(Settings.HttpAddress);
+
                 })
                 .Build();
         }
