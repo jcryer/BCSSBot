@@ -29,12 +29,12 @@ namespace BCSSBot.API.Controllers
             if (ModelState.IsValid)
             {
                 var user = _db.Users.FirstOrDefault(u => u.UserHash == userUpdate.UserHash);
+
                 if (user != null)
                 {
                     user.DiscordId = userUpdate.DiscordId;
 
-                    Console.WriteLine(user.Memberships.Count());
-                    _callbackHolder.Callback(user.DiscordId, user.Memberships.Select(x => x.Permission).ToArray());
+                    _callbackHolder.Callback(user.DiscordId, _db.Users.Where(x => x.UserHash == userUpdate.UserHash).SelectMany(x => x.Memberships).Select(x => x.Permission).ToArray());
 
                     _db.Users.Update(user);
                     await _db.SaveChangesAsync();
