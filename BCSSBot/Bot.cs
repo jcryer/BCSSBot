@@ -1,6 +1,9 @@
-﻿using DSharpPlus;
+﻿using BCSSBot.API.Models;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +12,21 @@ using System.Threading.Tasks;
 
 namespace BCSSBot
 {
-    internal sealed class Bot
+    public class Bot
     {
         private DiscordClient Discord;
         private CommandsNextExtension CommandsService;
+        private CoreContainer Container;
+        private ulong MainServer = 301631649978777610;
+        private bool Connected;
 
-        public Bot()
+        public Bot(CoreContainer container)
         {
+            Container = container;
+
             var discordConfig = new DiscordConfiguration
             {
-                Token = "",
+                Token = Container.Program.Settings.DiscordToken,
                 TokenType = TokenType.Bot
             };
 
@@ -41,12 +49,17 @@ namespace BCSSBot
         public async Task RunAsync()
         {
             await Discord.ConnectAsync();
-            await Task.Delay(-1);
+            await Task.Delay(0);
         }
 
         private async Task Discord_GuildAvailable(GuildCreateEventArgs e)
         {
             Console.WriteLine("Guild available: " + e.Guild.Name);
+
+            if (e.Guild.Id == MainServer)
+            {
+                Connected = true;
+            }
             await Task.Delay(0);
         }
 
@@ -67,10 +80,51 @@ namespace BCSSBot
         {
             // if in the db, give relevant roles
 
-            if (e.Member.Id == 22222)
+            var db = Container.Program.GlobalContextBuilder.CreateContext();
+
+            var user = db.Users.FirstOrDefault(x => (ulong)x.DiscordId == e.Member.Id);
+            if (user != null) // && hasn't previously been given roles
             {
-                await e.Member.GrantRoleAsync(e.Guild.Roles.First(x => x.Value.Name == "BCSS").Value);
+                await ModifyUser(e.Guild, e.Member, user.Memberships.Select(x => x.Permission).ToArray());
             }
+            db.SaveChanges();
+        }
+
+        public async Task<bool> ModifyUser(ulong userId, Permission[] permissions)
+        {
+            try
+            {
+                DiscordGuild guild = await Discord.GetGuildAsync(MainServer);
+                DiscordMember member = await guild.GetMemberAsync(userId);
+
+                if (member == null)
+                    return false;
+
+                await ModifyUser(guild, member, permissions);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task ModifyUser(DiscordGuild guild, DiscordMember member, Permission[] permissions)
+        {
+            foreach (var role in permissions.Where(x => x.Type == PermissionType.Role))
+            {
+                await member.GrantRoleAsync(guild.Roles.First(x => x.Key == (ulong)role.DiscordId).Value);
+            }
+
+            foreach (var role in permissions.Where(x => x.Type == PermissionType.Channel))
+            {
+                await guild.Channels.First(x => x.Key == (ulong)role.DiscordId).Value.AddOverwriteAsync(member, Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory);
+            }
+        }
+
+        public bool IsConnected()
+        {
+            return Connected;
         }
     }
 }

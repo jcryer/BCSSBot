@@ -35,6 +35,15 @@ namespace BCSSBot.API.Controllers
                 if (user != null)
                 {
                     user.DiscordId = userUpdate.discordId;
+                   
+
+                    var worked = _coreContainer.Program.Bot.ModifyUser((ulong)user.DiscordId, user.Memberships.Select(x => x.Permission).ToArray()).GetAwaiter().GetResult();
+
+                    if (worked)
+                    {
+                        // set flag saying the user has the roles required(?)
+                    }
+
                     db.Users.Update(user);
                     db.SaveChanges();
                     return Ok();

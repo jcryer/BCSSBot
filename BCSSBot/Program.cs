@@ -25,6 +25,8 @@ namespace BCSSBot
         
         public DatabaseContextBuilder GlobalContextBuilder { get; set; }
 
+        public Bot Bot;
+
         public static void Main(string[] args) => new Program().Run(args).GetAwaiter().GetResult();
 
         private async Task Run(string[] args)
@@ -47,16 +49,27 @@ namespace BCSSBot
             
             emailSender.SendEmails(recipients, strings,subjects);
             */
-            
+
             Program program = new Program();
             program.Start();
-            Bot bot = new Bot();
-            await bot.RunAsync();
-        }
 
-        private async void StartWebServer()
-        {
-            await BuildWebHost().RunAsync();
+            var container = new CoreContainer
+            {
+                Program = program
+            };
+
+            Bot = new Bot(container);
+            await Bot.RunAsync();
+            
+            while (!Bot.IsConnected())
+            {
+                continue;
+            }
+
+            /*
+            Permission[] x = { new Permission() { DiscordId = 552828506036240414, Type = PermissionType.Channel }, new Permission() { DiscordId = 523960418167816196, Type = PermissionType.Channel }, new Permission() { DiscordId = 520715386488881180, Type = PermissionType.Role }, new Permission() { DiscordId = 469269411719675935, Type = PermissionType.Role } };
+            Console.WriteLine(await Bot.ModifyUser(126070623855312896, x));
+            */
         }
 
         private IHost BuildWebHost()

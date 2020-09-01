@@ -122,3 +122,5 @@ dist
 .pnp.*
 .vs/BCSSBot/v16/.suo
 *.v2
+.vs/BCSSBot/v16/.suo
+.vs/BCSSBot/DesignTimeBuild/.dtbcache.v2

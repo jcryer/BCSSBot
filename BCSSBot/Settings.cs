@@ -20,7 +20,10 @@ namespace BCSSBot.API
         
         [JsonProperty("password")]
         public string Password { get; private set; }
-        
+
+        [JsonProperty("discordtoken")]
+        public string DiscordToken { get; private set; }
+
         private string BuildConnectionString()
         {
             return new NpgsqlConnectionStringBuilder
