@@ -51,15 +51,11 @@ namespace BCSSBot
             emailSender.SendEmails(recipients, strings,subjects);
             */
 
-            Program program = new Program();
-            program.Start();
+            Settings = Settings.getSettings();
+            
+            Start();
 
-            var container = new CoreContainer
-            {
-                Program = program
-            };
-
-            Bot = new Bot(container);
+            Bot = new Bot();
             await Bot.RunAsync();
             
             while (!Bot.IsConnected())
@@ -75,18 +71,10 @@ namespace BCSSBot
 
         private IHost BuildWebHost()
         {
-            var coreContainer = new CoreContainer
-            {
-                Program = this
-            };
-            
-            var coreContainerService = new ServiceDescriptor(coreContainer.GetType(), coreContainer);
-            
             return Host.CreateDefaultBuilder().ConfigureWebHostDefaults(builder =>
                 {
                     builder
-                        .UseStartup<Startup>()
-                        .ConfigureServices(x => x.Add(coreContainerService));
+                        .UseStartup<Startup>();
                 })
                 .Build();
         }
@@ -112,22 +100,6 @@ namespace BCSSBot
         
         private void Start() 
         {
-            if (!File.Exists("settings.json"))
-            {
-                var json = JsonConvert.SerializeObject(new Settings(), Formatting.Indented);
-                File.WriteAllText("settings.json", json, new UTF8Encoding(false));
-                Console.WriteLine("Config file was not found, a new one was generated. Fill it with proper values and rerun this program");
-                Console.ReadKey();
-                return;
-            }
-            
-            var input = File.ReadAllText("settings.json", new UTF8Encoding(false));
-            Settings = JsonConvert.DeserializeObject<Settings>(input);
-            
-            // Saving config with same values but updated fields
-            var newjson = JsonConvert.SerializeObject(Settings, Formatting.Indented);
-            File.WriteAllText("settings.json", newjson, new UTF8Encoding(false));
-            
             GlobalContextBuilder = Settings.CreateContextBuilder();
             
             BuildDataBase();

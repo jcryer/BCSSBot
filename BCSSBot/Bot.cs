@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BCSSBot.API;
+using Org.BouncyCastle.Crypto.Engines;
 
 namespace BCSSBot
 {
@@ -16,17 +18,14 @@ namespace BCSSBot
     {
         private DiscordClient Discord;
         private CommandsNextExtension CommandsService;
-        private CoreContainer Container;
         private ulong MainServer = 301631649978777610;
         private bool Connected;
 
-        public Bot(CoreContainer container)
+        public Bot()
         {
-            Container = container;
-
             var discordConfig = new DiscordConfiguration
             {
-                Token = Container.Program.Settings.DiscordToken,
+                Token = Settings.getSettings().DiscordToken,
                 TokenType = TokenType.Bot
             };
 
@@ -80,7 +79,7 @@ namespace BCSSBot
         {
             // if in the db, give relevant roles
 
-            var db = Container.Program.GlobalContextBuilder.CreateContext();
+            var db = Settings.getSettings().CreateContextBuilder().CreateContext();
 
             var user = db.Users.FirstOrDefault(x => (ulong)x.DiscordId == e.Member.Id);
             if (user != null) // && hasn't previously been given roles

@@ -14,12 +14,10 @@ namespace BCSSBot.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly CoreContainer _coreContainer;
         private readonly PostgresSqlContext _db;
-        public UserController(CoreContainer coreContainer)
+        public UserController()
         {
-            _coreContainer = coreContainer;
-            _db = coreContainer.Program.GlobalContextBuilder.CreateContext();
+            _db = Settings.getSettings().CreateContextBuilder().CreateContext();
         }
 
         [HttpPut]
@@ -36,8 +34,9 @@ namespace BCSSBot.API.Controllers
                 {
                     user.DiscordId = userUpdate.discordId;
                    
-                    var worked = await _coreContainer.Program.Bot.ModifyUser((ulong)user.DiscordId, user.Memberships.Select(x => x.Permission).ToArray());
-
+                    // TODO: CHANGE
+                    //var worked = await _coreContainer.Program.Bot.ModifyUser((ulong)user.DiscordId, user.Memberships.Select(x => x.Permission).ToArray());
+                    
                     _db.Users.Update(user);
                     await _db.SaveChangesAsync();
                     return Ok();
