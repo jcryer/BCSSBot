@@ -4,6 +4,7 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using MimeKit.Text;
+using MimeKit.Utils;
 
 namespace BCSSBot.Email
 {
@@ -66,7 +67,9 @@ namespace BCSSBot.Email
 Click the link below to connect them and get your roles!
 {link}";
 
-            builder.HtmlBody = Settings.GetSettings().HtmlString;
+            var image = builder.LinkedResources.Add("Assets/6a4941269d62fb1ed3a9b8007fa8ed4c.webp");
+            image.ContentId = MimeUtils.GenerateMessageId();
+            builder.HtmlBody = Settings.GetSettings().HtmlString.Replace("{EMAILPLACEHOLDER}", link).Replace("{IMAGEHOLDER}", image.ContentId);
             return builder.ToMessageBody();
         }
     }

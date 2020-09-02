@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
+    <e p="$APPLICATION_CONFIG_DIR$/consoles/db" t="IncludeRecursive" />
     <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.1/extResources" t="IncludeRecursive" />
     <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.1/resharper-host/local/Transient/ReSharperHost/v201/SolutionCaches/_BCSSBot.-2136163606.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
@@ -14,12 +15,16 @@
           </e>
           <e p="Startup.cs" t="Include" />
         </e>
-        <e p="Assets" t="Include" />
+        <e p="Assets" t="Include">
+          <e p="6a4941269d62fb1ed3a9b8007fa8ed4c.webp" t="Include" />
+        </e>
         <e p="BCSSBot.csproj" t="IncludeRecursive" />
         <e p="bin" t="ExcludeRecursive" />
-        <e p="Bot.cs" t="Include" />
+        <e p="Bot" t="Include">
+          <e p="Bot.cs" t="Include" />
+          <e p="Commands.cs" t="Include" />
+        </e>
         <e p="CallbackHolder.cs" t="Include" />
-        <e p="Commands.cs" t="Include" />
         <e p="Database" t="Include">
           <e p="DataAccess" t="Include">
             <e p="DatabaseContextBuilder.cs" t="Include" />
@@ -28,6 +33,7 @@
           <e p="Models" t="Include">
             <e p="Membership.cs" t="Include" />
             <e p="Permission.cs" t="Include" />
+            <e p="PermissionBlob.cs" t="Include" />
             <e p="User.cs" t="Include" />
           </e>
         </e>
@@ -45,6 +51,7 @@
         <e p="Program.cs" t="Include" />
         <e p="schema.sql" t="Include" />
         <e p="Settings.cs" t="Include" />
+        <e p="TestEmail.cs" t="Include" />
       </e>
       <e p="BCSSBot.sln" t="IncludeFlat" />
       <e p="packages" t="ExcludeRecursive" />

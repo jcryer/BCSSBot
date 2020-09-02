@@ -1,17 +1,94 @@
 <html>
 <head>
-    <title>Title</title>
+    <title>BCS Join Email</title>
     <style>
-        .colored {
-            color: blue;
+        body {
+            font-family: Courier,serif;
+        }
+        .btn {
+            border: none;
+            background: #350207;
+            padding: 14px 28px;
+            font-size: 20px;
+            cursor: pointer;
+            display: block;
+            color: white;
+            font-weight: bold;
+            border-radius: 10%;
+            margin: 0 auto;
+            text-align: center;
+            width: min-content;
+        }
+
+        .header {
+            width: 100%;
+        }
+
+        .leftSpace {
+            width: 15%;
+            float: left;
+        }
+
+        .title {
+            width: 70%;
+            float: left;
+            text-align: center;
+            text-anchor: middle;
+        }
+
+        .rightSpace {
+            width: 15%;
+            float: left;
+        }
+
+        img {
+            width: 80%;
+            border-radius: 50%;
+            box-shadow: 5px 5px 10px gray;
+
+        }
+
+        .container {
+            align-items: center;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .bodyContainer {
+            width: 100%;
+            align: center;
+            margin: 0 auto;
+        }
+
+        .buttonContainer {
+        }
+
+        a {
+            color: white;
         }
     </style>
 </head>
 <body>
-    <div id='body'>
-        <p>Hi Pierce,</p>
-        <p class='colored'>This text is blue.</p>
-        <p>Jerry</p>
+<div class="container">
+    <div class="header">
+        <div class="leftSpace">
+            <p></p>
+        </div>
+        <div class="title">
+            <h1>You've been assigned a role on the Bath Computer Science Server!</h1>
+        </div>
+        <div class="rightSpace">
+            <img src="cid:{IMAGEHOLDER}" width=100%/>
+        </div>
     </div>
+
+    <div class="bodyContainer">
+        Click the link to connect your discord account to the server and get your role!
+    </div>
+
+    <div class="buttonContainer">
+        <a class="btn" href="{EMAILPLACEHOLDER}">Connect!</a>
+    </div>
+</div>
 </body>
 </html>
