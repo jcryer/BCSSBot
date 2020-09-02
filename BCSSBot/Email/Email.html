@@ -5,90 +5,69 @@
         body {
             font-family: Courier,serif;
         }
-        .btn {
-            border: none;
-            background: #350207;
-            padding: 14px 28px;
-            font-size: 20px;
-            cursor: pointer;
-            display: block;
-            color: white;
-            font-weight: bold;
-            border-radius: 10%;
-            margin: 0 auto;
+
+        h1, .message {
+            color: black;
             text-align: center;
-            width: min-content;
         }
 
-        .header {
-            width: 100%;
-        }
-
-        .leftSpace {
-            width: 15%;
-            float: left;
-        }
-
-        .title {
-            width: 70%;
-            float: left;
-            text-align: center;
-            text-anchor: middle;
-        }
-
-        .rightSpace {
-            width: 15%;
-            float: left;
+        .message {
+            font-size: 15px;
         }
 
         img {
-            width: 80%;
+            width: 100%;
             border-radius: 50%;
-            box-shadow: 5px 5px 10px gray;
-
         }
 
-        .container {
-            align-items: center;
-            margin: 0 auto;
-            width: 100%;
+        .center {
+            width: 70%;
         }
 
-        .bodyContainer {
-            width: 100%;
-            align: center;
-            margin: 0 auto;
+        .side {
+            width: 15%;
         }
 
-        .buttonContainer {
+        a.btn, a.btn:link, a.btn:visited {
+            display: block;
+            margin: auto;
+            width: 150px;
+            background: #350207;
+            height: 50px;
+            line-height: 50px;
+            border: 3px solid #321a1d;
+            text-align: center;
+            border-radius: 25px;
+            font-size: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            color: white;
         }
 
-        a {
+        a.btn:hover {
+            background: #62040d;
             color: white;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <div class="leftSpace">
-            <p></p>
-        </div>
-        <div class="title">
-            <h1>You've been assigned a role on the Bath Computer Science Server!</h1>
-        </div>
-        <div class="rightSpace">
-            <img src="cid:{IMAGEHOLDER}" width=100%/>
-        </div>
-    </div>
+    <div class="container">
+        <table>
+            <tr>
+                <td class="side"></td>
+                <td class="center">
+                    <h1>You've been assigned a role on the Bath Computer Science Server!</h1>
+                </td>
+                <td class="side">
+                    <img src="cid:{IMAGEHOLDER}" />
+                </td>
+            </tr>
+        </table>
 
-    <div class="bodyContainer">
-        Click the link to connect your discord account to the server and get your role!
-    </div>
+        <p class="message">Click the link to connect your discord account to the server and get your role!</p>
 
-    <div class="buttonContainer">
         <a class="btn" href="{EMAILPLACEHOLDER}">Connect!</a>
+
     </div>
-</div>
 </body>
 </html>

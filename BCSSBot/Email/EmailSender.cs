@@ -38,7 +38,7 @@ namespace BCSSBot.Email
         public void SendEmails(string[] recipients, string[] links, string[] subject)
         {
             _smtpClient.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-            _smtpClient.Authenticate("bcssbot@gmail.com", "uxkhhtenqumalqyh");
+            _smtpClient.Authenticate(_username, _password);
             for (int i = 0; i < recipients.Length; i++)
             {
                 var email = new MimeMessage()
