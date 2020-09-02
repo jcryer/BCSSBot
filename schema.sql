@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 12.4
+-- Dumped from database version 12.4 (Ubuntu 12.4-1.pgdg16.04+1)
 -- Dumped by pg_dump version 12.4
 
 SET statement_timeout = 0;
@@ -21,7 +21,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: memberships; Type: TABLE; Schema: public; Owner: postgres
+-- Name: memberships; Type: TABLE; Schema: public; Owner: bcss
 --
 
 CREATE TABLE public.memberships (
@@ -30,23 +30,37 @@ CREATE TABLE public.memberships (
 );
 
 
-ALTER TABLE public.memberships OWNER TO postgres;
+ALTER TABLE public.memberships OWNER TO bcss;
 
 --
--- Name: permissions; Type: TABLE; Schema: public; Owner: postgres
+-- Name: permissions; Type: TABLE; Schema: public; Owner: bcss
 --
 
 CREATE TABLE public.permissions (
-    permission_id BIGINT GENERATED ALWAYS AS IDENTITY,
-    permission_type BIGINT,
-    permission_string TEXT
+    permission_id bigint NOT NULL,
+    permission_string text,
+    permission_name text
 );
 
 
-ALTER TABLE public.permissions OWNER TO postgres;
+ALTER TABLE public.permissions OWNER TO bcss;
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: postgres
+-- Name: permissions_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: bcss
+--
+
+ALTER TABLE public.permissions ALTER COLUMN permission_id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.permissions_permission_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: bcss
 --
 
 CREATE TABLE public.users (
@@ -55,10 +69,43 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO postgres;
+ALTER TABLE public.users OWNER TO bcss;
 
 --
--- Name: permissions permissions_discord_permission_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Data for Name: memberships; Type: TABLE DATA; Schema: public; Owner: bcss
+--
+
+COPY public.memberships (user_hash, permission_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: permissions; Type: TABLE DATA; Schema: public; Owner: bcss
+--
+
+COPY public.permissions (permission_id, permission_string, permission_name) FROM stdin;
+1	{"items":[{"discordid":469269411719675935,"type":0},{"discordid":520715003763097624,"type":1}]}	testGroup1
+2	{"items":[]}	testGroup2
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: bcss
+--
+
+COPY public.users (user_hash, discord_id) FROM stdin;
+\.
+
+
+--
+-- Name: permissions_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: bcss
+--
+
+SELECT pg_catalog.setval('public.permissions_permission_id_seq', 2, true);
+
+
+--
+-- Name: permissions permissions_permission_id_key; Type: CONSTRAINT; Schema: public; Owner: bcss
 --
 
 ALTER TABLE ONLY public.permissions
@@ -66,7 +113,7 @@ ALTER TABLE ONLY public.permissions
 
 
 --
--- Name: permissions permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: permissions permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: bcss
 --
 
 ALTER TABLE ONLY public.permissions
@@ -74,7 +121,7 @@ ALTER TABLE ONLY public.permissions
 
 
 --
--- Name: users users_discord_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: users users_discord_id_key; Type: CONSTRAINT; Schema: public; Owner: bcss
 --
 
 ALTER TABLE ONLY public.users
@@ -82,7 +129,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: bcss
 --
 
 ALTER TABLE ONLY public.users
@@ -90,7 +137,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: users users_user_hash_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: users users_user_hash_key; Type: CONSTRAINT; Schema: public; Owner: bcss
 --
 
 ALTER TABLE ONLY public.users
@@ -98,7 +145,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: memberships memberships_discord_permission_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: memberships memberships_permission_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: bcss
 --
 
 ALTER TABLE ONLY public.memberships
@@ -106,7 +153,7 @@ ALTER TABLE ONLY public.memberships
 
 
 --
--- Name: memberships memberships_user_hash_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: memberships memberships_user_hash_fkey; Type: FK CONSTRAINT; Schema: public; Owner: bcss
 --
 
 ALTER TABLE ONLY public.memberships
