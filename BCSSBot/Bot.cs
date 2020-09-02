@@ -108,15 +108,15 @@ namespace BCSSBot
 
         public async Task ModifyUser(DiscordGuild guild, DiscordMember member, Permission[] permissions)
         {
-            foreach (var role in permissions.Where(x => x.Type == PermissionType.Role))
-            {
-                await member.GrantRoleAsync(guild.Roles[role.DiscordId]);
-            }
-
-            foreach (var role in permissions.Where(x => x.Type == PermissionType.Channel))
-            {
-                await guild.Channels[role.DiscordId].AddOverwriteAsync(member, Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory);
-            }
+            // foreach (var role in permissions.Where(x => x.Type == PermissionType.Role))
+            // {
+            //     await member.GrantRoleAsync(guild.Roles[role.DiscordId]);
+            // }
+            //
+            // foreach (var role in permissions.Where(x => x.Type == PermissionType.Channel))
+            // {
+            //     await guild.Channels[role.DiscordId].AddOverwriteAsync(member, Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory);
+            // }
         }
 
         public bool IsConnected()

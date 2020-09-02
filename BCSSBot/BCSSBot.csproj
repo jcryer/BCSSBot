@@ -21,4 +21,14 @@
       <PackageReference Include="MailKit" Version="2.8.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Assets" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Email\Email.html">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

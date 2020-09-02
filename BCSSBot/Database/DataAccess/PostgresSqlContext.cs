@@ -1,5 +1,3 @@
-using System;
-using System.Text.RegularExpressions;
 using BCSSBot.API.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,7 +25,7 @@ namespace BCSSBot.Database.DataAccess
             modelBuilder.Entity<User>().ToTable("users");
             modelBuilder.Entity<Permission>().ToTable("permissions");
             modelBuilder.Entity<Membership>().ToTable("memberships")
-                .HasKey(m => new {userHash = m.UserHash, discordId = m.DiscordId});
+                .HasKey(m => new {userHash = m.UserHash, discordId = m.Id});
 
             modelBuilder.Entity<Membership>()
                 .HasOne(m => m.User)
@@ -37,7 +35,7 @@ namespace BCSSBot.Database.DataAccess
             modelBuilder.Entity<Membership>()
                 .HasOne(m => m.Permission)
                 .WithMany(p => p.Memberships)
-                .HasForeignKey(m => m.DiscordId);
+                .HasForeignKey(m => m.Id);
         }
             
         public override int SaveChanges()

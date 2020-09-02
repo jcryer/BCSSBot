@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using BCSSBot.Database.DataAccess;
+using Microsoft.AspNetCore.Html;
 using Newtonsoft.Json;
 using Npgsql;
 
@@ -26,6 +27,9 @@ namespace BCSSBot.API
 
                 var input = File.ReadAllText("settings.json", new UTF8Encoding(false));
                 _instance = JsonConvert.DeserializeObject<Settings>(input);
+
+                _instance.HtmlString = File.ReadAllText("Email/Email.html");
+                
 
                 // Saving config with same values but updated fields
                 var newjson = JsonConvert.SerializeObject(_instance, Formatting.Indented);
@@ -63,6 +67,9 @@ namespace BCSSBot.API
         
         [JsonProperty("httpaddress")]
         public string HttpAddress { get; private set; }
+        
+        [JsonIgnore]
+        public string HtmlString { get; private set;  }
 
         private string BuildConnectionString()
         {

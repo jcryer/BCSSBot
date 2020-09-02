@@ -7,10 +7,14 @@ namespace BCSSBot.API.Models
     public class Permission
     {
         [Key]
-        [Column("discord_permission_id")]
-        public ulong DiscordId { get; set; }
-        [Column("permission_type")]
-        public PermissionType Type { get; set; }
+        [Column("permission_id")]
+        public ulong Id { get; set; }
+
+        [Column("permission_name")] 
+        public string Name { get; set; }
+
+        [Column("permission_string")] 
+        public string JsonBlob { get; set; }
         
         public virtual ICollection<Membership> Memberships { get; }
     }
