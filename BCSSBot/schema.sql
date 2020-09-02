@@ -26,7 +26,7 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.memberships (
     user_hash bigint,
-    permission_id bigint
+    discord_permission_id bigint
 );
 
 
@@ -37,9 +37,8 @@ ALTER TABLE public.memberships OWNER TO postgres;
 --
 
 CREATE TABLE public.permissions (
-    permission_id BIGINT GENERATED ALWAYS AS IDENTITY,
-    permission_type BIGINT,
-    permission_string TEXT
+    discord_permission_id bigint NOT NULL,
+    permission_type integer
 );
 
 
@@ -62,7 +61,7 @@ ALTER TABLE public.users OWNER TO postgres;
 --
 
 ALTER TABLE ONLY public.permissions
-    ADD CONSTRAINT permissions_permission_id_key UNIQUE (permission_id);
+    ADD CONSTRAINT permissions_discord_permission_id_key UNIQUE (discord_permission_id);
 
 
 --
@@ -70,7 +69,7 @@ ALTER TABLE ONLY public.permissions
 --
 
 ALTER TABLE ONLY public.permissions
-    ADD CONSTRAINT permissions_pkey PRIMARY KEY (permission_id);
+    ADD CONSTRAINT permissions_pkey PRIMARY KEY (discord_permission_id);
 
 
 --
@@ -102,7 +101,7 @@ ALTER TABLE ONLY public.users
 --
 
 ALTER TABLE ONLY public.memberships
-    ADD CONSTRAINT memberships_permission_id_fkey FOREIGN KEY (permission_id) REFERENCES public.permissions(permission_id);
+    ADD CONSTRAINT memberships_discord_permission_id_fkey FOREIGN KEY (discord_permission_id) REFERENCES public.permissions(discord_permission_id);
 
 
 --

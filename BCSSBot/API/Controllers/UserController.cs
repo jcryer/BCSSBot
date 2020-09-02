@@ -34,7 +34,7 @@ namespace BCSSBot.API.Controllers
                 {
                     user.DiscordId = userUpdate.DiscordId;
 
-                    _callbackHolder.Callback(user.DiscordId, _db.Users.Where(x => x.UserHash == userUpdate.UserHash).SelectMany(x => x.Memberships).Select(x => x.Permission).ToArray());
+                    _callbackHolder.Callback(userUpdate.DiscordId, user.Memberships.Select(x => x.Permission).ToArray());
 
                     _db.Users.Update(user);
                     await _db.SaveChangesAsync();

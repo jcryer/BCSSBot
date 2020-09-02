@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using BCSSBot.Database.DataAccess;
+using BCSSBot.Email;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BCSSBot
@@ -19,27 +20,10 @@ namespace BCSSBot
 
         private async Task Run(string[] args)
         {
-            /*
-            Console.WriteLine("Hello World!");
-            using var emailSender = new EmailSender();
-            emailSender.SendEmail("arichardsdev@gmail.com", "Test", "Subject");
-
-            const int len = 10;
-            string[] strings = new string[len]; 
-            string[] recipients = new string[len]; 
-            string[] subjects = new string[len]; 
-            for (int i = 0; i < len; i++)
-            {
-                strings[i] = $"{i}";
-                subjects[i] = $"subject{i}";
-                recipients[i] = "arichardsdev@gmail.com";
-            }
-            
-            emailSender.SendEmails(recipients, strings,subjects);
-            */
-            //TestDb();
             Settings = Settings.GetSettings();
-
+            
+            using var emailSender = new EmailSender(Settings.EmailUsername, Settings.EmailPassword);
+            
             Bot = new Bot();
             var callbackHolder = await Bot.RunAsync();
             
