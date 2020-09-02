@@ -39,7 +39,7 @@ namespace BCSSBot.Database.DataAccess
                 .WithMany(p => p.Memberships)
                 .HasForeignKey(m => m.DiscordId);
         }
-            
+
         public override int SaveChanges()
         {
             ChangeTracker.DetectChanges();

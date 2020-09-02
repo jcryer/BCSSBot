@@ -14,5 +14,4 @@ namespace BCSSBot.API.Models
         
         public virtual ICollection<Membership> Memberships { get; }
     }
-    
 }

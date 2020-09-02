@@ -1,10 +1,13 @@
-﻿using DSharpPlus;
+﻿using BCSSBot.API;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace BCSSBot
@@ -54,8 +57,48 @@ namespace BCSSBot
             {
                 await x.DeleteAsync();
             }
-            await cat.DeleteAsync();
+            await cat.DeleteAsync();\
             await e.RespondAsync("Done!");
+        }
+
+        [Command("addusers"), Description(""), RequireUserPermissions(Permissions.Administrator)]
+        public async Task AddUsers(CommandContext e, string permission, [RemainingText]string users)
+        {
+            var _db = Settings.GetSettings().CreateContextBuilder().CreateContext();
+
+            _db.Permissions.First(x => x.dis)
+            if (users.Length == 0 && e.Message.Attachments.Count > 0)
+            {
+                string fileName = e.Message.Attachments.First().FileName;
+                using WebClient myWebClient = new WebClient();
+                myWebClient.DownloadFile(e.Message.Attachments.First().Url, fileName);
+                users = File.ReadAllText(fileName);
+                File.Delete(fileName);
+            }
+
+            var eachLine = users.Split('\n');
+
+            foreach (var user in eachLine)
+            {
+                // add user to db
+            }
         }
     }
 }
+
+/*
+ 
+   
+     var user = _db.Users.FirstOrDefault(u => u.UserHash == userUpdate.UserHash);
+
+                if (user != null)
+                {
+                    user.DiscordId = userUpdate.DiscordId;
+
+                    _callbackHolder.Callback(user.DiscordId, _db.Users.Where(x => x.UserHash == userUpdate.UserHash).SelectMany(x => x.Memberships).Select(x => x.Permission).ToArray());
+
+                    _db.Users.Update(user);
+                    await _db.SaveChangesAsync();
+                    return Ok();
+                }
+ * */
