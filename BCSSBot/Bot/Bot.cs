@@ -53,7 +53,7 @@ namespace BCSSBot.Bots
         {
             await Discord.ConnectAsync();
 
-            var holder = new CallbackHolder(async (id, perms) => { await ModifyUser(id, perms); });
+            var holder = new CallbackHolder(async (id, perms) => { await ModifyUser(id, perms, Discord); });
             return await Task.FromResult(holder);
         }
 
@@ -82,29 +82,29 @@ namespace BCSSBot.Bots
 
         private async Task Discord_GuildMemberAdded(GuildMemberAddEventArgs e)
         {
-            // if in the db, give relevant roles
-
             var db = Settings.GetSettings().CreateContextBuilder().CreateContext();
 
             var user = db.Users.FirstOrDefault(x => x.DiscordId == e.Member.Id);
+            var permissions = db.Users.Where(x => x.DiscordId == e.Member.Id)?.SelectMany(x => x.Memberships)?.Select(x => x.Permission)?.ToArray();
+
             if (user != null)
             {
-                //await ModifyUser(e.Guild, e.Member, user.Memberships.Select(x => x.Permission).ToArray());
+                await ModifyUser(e.Guild, e.Member, permissions);
             }
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
 
-        public async Task<bool> ModifyUser(ulong userId, Permission[] permissions)
+        public static async Task<bool> ModifyUser(ulong userId, Permission[] permissions, DiscordClient discord)
         {
             try
             {
-                DiscordGuild guild = await Discord.GetGuildAsync(Settings.GetSettings().DiscordServer);
+                DiscordGuild guild = await discord.GetGuildAsync(Settings.GetSettings().DiscordServer);
                 DiscordMember member = await guild.GetMemberAsync(userId);
 
                 if (member == null)
                     return false;
 
-                //await ModifyUser(guild, member, permissions);
+                await ModifyUser(guild, member, permissions);
                 return true;
             }
             catch (Exception)
@@ -112,19 +112,25 @@ namespace BCSSBot.Bots
                 return false;
             }
         }
-        /*
-        public async Task ModifyUser(DiscordGuild guild, DiscordMember member, Permission[] permissions)
-        {
-            foreach (var role in permissions.Where(x => x. == PermissionType.Role))
-            {
-                await member.GrantRoleAsync(guild.Roles[role.DiscordId]);
-            }
 
-            foreach (var role in permissions.Where(x => x.Type == PermissionType.Channel))
+        public static async Task ModifyUser(DiscordGuild guild, DiscordMember member, Permission[] permissions)
+        {
+            foreach (var permissionSet in permissions)
             {
-                await guild.Channels[role.DiscordId].AddOverwriteAsync(member, Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory);
+                var permissionObj = permissionSet.GetPermissionBlob();
+                foreach (var item in permissionObj.Items)
+                {
+                    if (item.Type == PermissionType.Channel)
+                    {
+                        await guild.Channels[item.DiscordId].AddOverwriteAsync(member, Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory);
+                    }
+                    else if (item.Type == PermissionType.Role)
+                    {
+                        await member.GrantRoleAsync(guild.Roles[item.DiscordId]);
+                    }
+                }
             }
-        }*/
+        }
 
         public bool IsConnected()
         {

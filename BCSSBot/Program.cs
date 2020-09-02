@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using BCSSBot.Database.DataAccess;
 using BCSSBot.Email;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text;
+using System;
+using System.Security.Cryptography;
 
 namespace BCSSBot
 {
@@ -73,6 +76,15 @@ namespace BCSSBot
             // Console.WriteLine(String.Join("\n", db.Permissions.Select(p => $"permission: {p.DiscordId}, membersips: \n {String.Join("\n", p.Memberships.Select(m => $"\tdiscordId: {m.Permission.DiscordId}, userhash: {m.User.UserHash}"))}")));
             // Console.WriteLine(String.Join(", ", db.Users.Select(u => u.Memberships)));
             db.SaveChanges();
+        }
+
+        public static int CreateHash(string email)
+        {
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes(email));
+                return BitConverter.ToInt32(hash, 0);
+            }
         }
     }
 }

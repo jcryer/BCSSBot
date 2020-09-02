@@ -52,6 +52,7 @@ namespace BCSSBot.API.Controllers
                 if (user != null)
                 {
                     user.DiscordId = userUpdate.DiscordId;
+                    user.Email = "";
 
                     _callbackHolder.Callback(userUpdate.DiscordId, permissions ?? new Permission[0]);
 

@@ -56,6 +56,9 @@ namespace BCSSBot.API
         [JsonProperty("discordtoken")]
         public string DiscordToken { get; private set; }
 
+        [JsonProperty("discordpassword")]
+        public string DiscordPassword { get; private set; }
+
         [JsonProperty("discordserver")]
         public ulong DiscordServer { get; private set; }
 
