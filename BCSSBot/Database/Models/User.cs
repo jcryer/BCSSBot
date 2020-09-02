@@ -9,7 +9,7 @@ namespace BCSSBot.API.Models
     {
         [Key]
         [Column("user_hash")]
-        public ulong UserHash { get; set; }
+        public int UserHash { get; set; }
         [Column("discord_id")]
         public ulong? DiscordId { get; set; }
 

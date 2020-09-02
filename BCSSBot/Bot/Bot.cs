@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BCSSBot.API;
 
-namespace BCSSBot
+namespace BCSSBot.Bots
 {
     public class Bot
     {
@@ -38,8 +38,15 @@ namespace BCSSBot
             Discord.GuildMemberAdded += Discord_GuildMemberAdded;
 
             CommandsService = Discord.UseCommandsNext(commandsConfig);
+            CommandsService.CommandErrored += CommandsService_CommandErrored;
 
             CommandsService.RegisterCommands(typeof(Commands));
+        }
+
+        private async Task CommandsService_CommandErrored(CommandErrorEventArgs e)
+        {
+            Console.WriteLine(e.Exception);
+            await Task.Delay(0);
         }
 
         public async Task<CallbackHolder> RunAsync()
@@ -80,9 +87,9 @@ namespace BCSSBot
             var db = Settings.GetSettings().CreateContextBuilder().CreateContext();
 
             var user = db.Users.FirstOrDefault(x => x.DiscordId == e.Member.Id);
-            if (user != null) // && hasn't previously been given roles
+            if (user != null)
             {
-                await ModifyUser(e.Guild, e.Member, user.Memberships.Select(x => x.Permission).ToArray());
+                //await ModifyUser(e.Guild, e.Member, user.Memberships.Select(x => x.Permission).ToArray());
             }
             db.SaveChanges();
         }
@@ -97,7 +104,7 @@ namespace BCSSBot
                 if (member == null)
                     return false;
 
-                await ModifyUser(guild, member, permissions);
+                //await ModifyUser(guild, member, permissions);
                 return true;
             }
             catch (Exception)
@@ -105,19 +112,19 @@ namespace BCSSBot
                 return false;
             }
         }
-
+        /*
         public async Task ModifyUser(DiscordGuild guild, DiscordMember member, Permission[] permissions)
         {
-            // foreach (var role in permissions.Where(x => x.Type == PermissionType.Role))
-            // {
-            //     await member.GrantRoleAsync(guild.Roles[role.DiscordId]);
-            // }
-            //
-            // foreach (var role in permissions.Where(x => x.Type == PermissionType.Channel))
-            // {
-            //     await guild.Channels[role.DiscordId].AddOverwriteAsync(member, Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory);
-            // }
-        }
+            foreach (var role in permissions.Where(x => x. == PermissionType.Role))
+            {
+                await member.GrantRoleAsync(guild.Roles[role.DiscordId]);
+            }
+
+            foreach (var role in permissions.Where(x => x.Type == PermissionType.Channel))
+            {
+                await guild.Channels[role.DiscordId].AddOverwriteAsync(member, Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory);
+            }
+        }*/
 
         public bool IsConnected()
         {

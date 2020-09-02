@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BCSSBot.API.Models;
 using BCSSBot.Database.DataAccess;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace BCSSBot.API.Controllers
 {
@@ -29,12 +31,29 @@ namespace BCSSBot.API.Controllers
             if (ModelState.IsValid)
             {
                 var user = _db.Users.FirstOrDefault(u => u.UserHash == userUpdate.UserHash);
+                var permissions = _db.Users.Where(x => x.UserHash == userUpdate.UserHash)?.SelectMany(x => x.Memberships)?.Select(x => x.Permission)?.ToArray();
+
+                //var query = _db.Users.Join(_db.Memberships, id => id.UserHash,)
+                /*
+                var query = (from u in _db.Users
+                             join m in _db.Memberships
+                             on u.UserHash equals m.UserHash
+                             join p in _db.Permissions
+                             on m.Id equals p.Id
+                             where u.UserHash == userUpdate.UserHash
+
+                             select new
+                             {
+                                 discordId = u.DiscordId,
+                                 permissions = p.JsonBlob
+                             }).ToList();
+                */               
 
                 if (user != null)
                 {
                     user.DiscordId = userUpdate.DiscordId;
 
-                    _callbackHolder.Callback(userUpdate.DiscordId, user.Memberships.Select(x => x.Permission).ToArray());
+                    _callbackHolder.Callback(userUpdate.DiscordId, permissions ?? new Permission[0]);
 
                     _db.Users.Update(user);
                     await _db.SaveChangesAsync();

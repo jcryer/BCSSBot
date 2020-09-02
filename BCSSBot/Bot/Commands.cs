@@ -1,4 +1,6 @@
 ﻿using BCSSBot.API;
+using BCSSBot.API.Models;
+using BCSSBot.Email;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -8,9 +10,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace BCSSBot
+namespace BCSSBot.Bots
 {
     class Commands : BaseCommandModule
     {
@@ -57,10 +60,94 @@ namespace BCSSBot
             {
                 await x.DeleteAsync();
             }
-            await cat.DeleteAsync();\
+            await cat.DeleteAsync();
             await e.RespondAsync("Done!");
         }
 
+        [Command("creategroup"), Description("Command to create a permission group"), RequireUserPermissions(Permissions.Administrator)]
+        public async Task CreateGroup(CommandContext e, string groupName)
+        {
+            await CreateGroup(groupName);
+
+            await e.RespondAsync("Done!");
+        }
+
+        [Command("addtogroup"), Description("Command to add to a permission group"), RequireUserPermissions(Permissions.Administrator)]
+        public async Task AddToGroup(CommandContext e, string groupName, DiscordRole role)
+        {
+            await AddPermissionToGroup(groupName, role.Id, PermissionType.Role);
+
+            await e.RespondAsync("Done!");
+        }
+
+        [Command("addtogroup"), Description("Command to add to a permission group"), RequireUserPermissions(Permissions.Administrator)]
+        public async Task AddToGroup(CommandContext e, string groupName, DiscordChannel channel)
+        {
+            await AddPermissionToGroup(groupName, channel.Id, PermissionType.Channel);
+
+            await e.RespondAsync("Done!");
+        }
+
+        public async Task CreateGroup(string groupName)
+        {
+            var _db = Settings.GetSettings().CreateContextBuilder().CreateContext();
+
+            var perm = new Permission()
+            {
+                Name = groupName
+            };
+            perm.SetPermissionBlob(new PermissionBlob());
+
+            _db.Permissions.Add(perm);
+            await _db.SaveChangesAsync();
+        }
+
+
+        public async Task AddPermissionToGroup(string groupName, ulong discordId, PermissionType type)
+        {
+            var _db = Settings.GetSettings().CreateContextBuilder().CreateContext();
+            var perm = _db.Permissions.First(x => x.Name == groupName);
+
+            var blob = perm.GetPermissionBlob();
+
+            blob.Items.Add(new PermissionItem(discordId, type));
+
+            perm.SetPermissionBlob(blob);
+
+            _db.Permissions.Update(perm);
+            await _db.SaveChangesAsync();
+        }
+
+        [Command("adduser")]
+        public async Task AddUser(CommandContext e, string groupName, string email)
+        {
+            var _db = Settings.GetSettings().CreateContextBuilder().CreateContext();
+
+            var perm = _db.Permissions.First(x => x.Name == groupName);
+
+            _db.Memberships.Add(new Membership()
+            {
+                Id = perm.Id,
+                UserHash = email.GetHashCode()
+            });
+
+            _db.Users.Add(new User()
+            {
+                Email = email,
+                UserHash = email.GetHashCode()
+            });
+
+            var settings = Settings.GetSettings();
+            // send email
+            var emailHandler = new EmailSender(settings.EmailUsername, settings.EmailPassword);
+
+            emailHandler.SendEmail(email, "", "Hello: " + (ulong)email.GetHashCode());
+
+            await _db.SaveChangesAsync();
+            await e.RespondAsync("Done");
+        }
+
+        /*
         [Command("addusers"), Description(""), RequireUserPermissions(Permissions.Administrator)]
         public async Task AddUsers(CommandContext e, string permission, [RemainingText]string users)
         {
@@ -83,6 +170,7 @@ namespace BCSSBot
                 // add user to db
             }
         }
+        */
     }
 }
 
