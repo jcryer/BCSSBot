@@ -29,6 +29,7 @@ namespace BCSSBot.API.Controllers
             if (ModelState.IsValid)
             {
                 var user = _db.Users.FirstOrDefault(u => u.UserHash == userUpdate.UserHash);
+
                 if (user != null)
                 {
                     user.DiscordId = userUpdate.DiscordId;
