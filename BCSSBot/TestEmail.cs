@@ -16,7 +16,7 @@ namespace BCSSBot
 
         public TestEmail()
         {
-            EmailSender.SendEmails(new string[]{"alfierchrds@gmail.com", "jcryer1234@gmail.com"}, new string[]{"www.google.com", "www.google.com"}, new string[]{"www.google.com", "www.google.com"});
+            EmailSender.SendEmails(new string[]{"alfierchrds@gmail.com"}, new string[]{"https://www.google.com"}, new string[]{"Title"});
         }
     }
 }
