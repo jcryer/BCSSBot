@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BCSSBot.API;
+using BCSSBot.Database.Models;
 
 namespace BCSSBot.Bots
 {

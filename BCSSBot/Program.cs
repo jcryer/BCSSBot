@@ -13,22 +13,22 @@ namespace BCSSBot
 {
     public class Program
     {
-        public Settings Settings { get; private set; }
-        
-        public Bot Bot;
+        private Settings Settings { get; set; }
 
-        public static async Task Main(string[] args)=> await new Program().Run(args);
+        private Bot _bot;
 
-        private async Task Run(string[] args)
+        public static async Task Main(string[] args)=> await new Program().Run();
+
+        private async Task Run()
         {
             Settings = Settings.GetSettings();
             
             using var emailSender = new EmailSender(Settings.EmailUsername, Settings.EmailPassword);
             
-            Bot = new Bot();
-            var callbackHolder = await Bot.RunAsync();
+            _bot = new Bot();
+            var callbackHolder = await _bot.RunAsync();
             
-            while (!Bot.IsConnected())
+            while (!_bot.IsConnected())
             {
                 continue;
             }

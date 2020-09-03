@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BCSSBot.API.Models;
 using BCSSBot.Database.DataAccess;
+using BCSSBot.Database.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BCSSBot.API.Controllers

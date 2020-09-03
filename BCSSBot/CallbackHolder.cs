@@ -1,7 +1,6 @@
 ﻿using BCSSBot.API.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using BCSSBot.Database.Models;
 
 namespace BCSSBot
 {

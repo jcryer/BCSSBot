@@ -1,4 +1,5 @@
 using BCSSBot.API.Models;
+using BCSSBot.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BCSSBot.Database.DataAccess

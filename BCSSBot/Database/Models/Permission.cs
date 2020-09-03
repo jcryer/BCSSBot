@@ -1,9 +1,10 @@
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BCSSBot.API.Models;
+using Newtonsoft.Json;
 
-namespace BCSSBot.API.Models
+namespace BCSSBot.Database.Models
 {
     public class Permission
     {

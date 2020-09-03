@@ -1,19 +1,13 @@
-﻿using BCSSBot.API;
-using BCSSBot.API.Models;
+﻿using BCSSBot.API.Models;
 using BCSSBot.Email;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using MimeKit.Encodings;
-using Org.BouncyCastle.Math.EC.Rfc7748;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using BCSSBot.Database.Models;
 
 namespace BCSSBot.Bots
 {
@@ -199,7 +193,7 @@ namespace BCSSBot.Bots
 
         public async Task CreateGroup(string groupName)
         {
-            var _db = Settings.GetSettings().BuildContext();
+            var db = Settings.GetSettings().BuildContext();
 
             var perm = new Permission()
             {
@@ -207,15 +201,15 @@ namespace BCSSBot.Bots
             };
             perm.SetPermissionBlob(new PermissionBlob());
 
-            await _db.Permissions.AddAsync(perm);
-            await _db.SaveChangesAsync();
+            await db.Permissions.AddAsync(perm);
+            await db.SaveChangesAsync();
         }
 
 
         public async Task AddPermissionToGroup(string groupName, ulong discordId, PermissionType type)
         {
-            var _db = Settings.GetSettings().BuildContext();
-            var perm = _db.Permissions.First(x => x.Name == groupName);
+            var db = Settings.GetSettings().BuildContext();
+            var perm = db.Permissions.First(x => x.Name == groupName);
 
             var blob = perm.GetPermissionBlob();
 
@@ -223,8 +217,8 @@ namespace BCSSBot.Bots
 
             perm.SetPermissionBlob(blob);
 
-            _db.Permissions.Update(perm);
-            await _db.SaveChangesAsync();
+            db.Permissions.Update(perm);
+            await db.SaveChangesAsync();
         }
 
         

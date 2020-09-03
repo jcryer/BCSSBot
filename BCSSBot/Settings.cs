@@ -2,39 +2,38 @@ using System;
 using System.IO;
 using System.Text;
 using BCSSBot.Database.DataAccess;
-using Microsoft.AspNetCore.Html;
 using Newtonsoft.Json;
 using Npgsql;
 
-namespace BCSSBot.API
+namespace BCSSBot
 {
     public sealed class Settings
     {
-        private static Settings _instance = null;
+        private static Settings _instance;
         public static Settings GetSettings()
         {
-            if (_instance == null)
+            if (_instance != null) return _instance;
+            
+            if (!File.Exists("settings.json"))
             {
-                if (!File.Exists("settings.json"))
-                {
-                    var json = JsonConvert.SerializeObject(new Settings(), Formatting.Indented);
-                    File.WriteAllText("settings.json", json, new UTF8Encoding(false));
-                    Console.WriteLine(
-                        "Config file was not found, a new one was generated. Fill it with proper values and rerun this program");
-                    Console.ReadKey();
-                    Environment.Exit(1);
-                }
+                var json = JsonConvert.SerializeObject(new Settings(), Formatting.Indented);
+                File.WriteAllText("settings.json", json, new UTF8Encoding(false));
+                Console.WriteLine(
+                    "Config file was not found, a new one was generated. Fill it with proper values and rerun this program");
+                Console.ReadKey();
+                // If settings file doesnt exist. Kill the program.
+                Environment.Exit(1);
+            }
 
-                var input = File.ReadAllText("settings.json", new UTF8Encoding(false));
-                _instance = JsonConvert.DeserializeObject<Settings>(input);
+            var input = File.ReadAllText("settings.json", new UTF8Encoding(false));
+            _instance = JsonConvert.DeserializeObject<Settings>(input);
 
-                _instance.HtmlString = File.ReadAllText("Email/Email.html");
+            _instance.HtmlString = File.ReadAllText("Email/Email.html");
                 
 
-                // Saving config with same values but updated fields
-                var newjson = JsonConvert.SerializeObject(_instance, Formatting.Indented);
-                File.WriteAllText("settings.json", newjson, new UTF8Encoding(false));
-            }
+            // Saving config with same values but updated fields
+            var newjson = JsonConvert.SerializeObject(_instance, Formatting.Indented);
+            File.WriteAllText("settings.json", newjson, new UTF8Encoding(false));
             return _instance;
         }
         

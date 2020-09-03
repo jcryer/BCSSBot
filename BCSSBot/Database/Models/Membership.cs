@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BCSSBot.API.Models;
 
-namespace BCSSBot.API.Models
+namespace BCSSBot.Database.Models
 {
     public class Membership
     {

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using BCSSBot.Database.DataAccess;
-using Microsoft.AspNetCore.Html;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using Npgsql;
 
-namespace BCSSBot.API.Models
+namespace BCSSBot.Database.Models
 {
     public class PermissionBlob
     {
