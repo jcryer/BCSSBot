@@ -17,7 +17,7 @@ router.get('/', async function(req, res) {
     axios.get('https://discord.com/api/users/@me', { 'headers': {'Authorization': 'Bearer ' + oAuthResponse.data.access_token} })
     .then(function(user) {
       console.log(user.data.id);
-      axios.post('http://51.15.222.156/api/User/', {
+      axios.post('http://51.15.222.156:5000/api/User/', {
         'userHash': req.query.state,
         'discordId': user.data.id
       })
