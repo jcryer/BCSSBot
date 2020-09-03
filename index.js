@@ -25,14 +25,19 @@ router.get('/', async function(req, res) {
         res.redirect("https://www.thesubath.com/bcss/");
       })
       .catch(function(error) {
+        console.log(error);
         res.send(errorText);
       });
     })
     .catch (function(error) {
+              console.log(error);
+
       res.send(errorText);
     });
   })
   .catch (function(error) {
+            console.log(error);
+
     res.send(errorText);
   });
 });
