@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <StartupObject>BCSSBot.TestEmail</StartupObject>
+    <StartupObject>BCSSBot.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
