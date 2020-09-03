@@ -18,8 +18,8 @@ router.get('/', async function(req, res) {
     .then(function(user) {
       console.log(user.data.id);
       axios.put('http://51.15.222.156:5000/api/User/', {
-        'userHash': Number(req.query.state),
-        'discordId': Number(user.data.id)
+        'userHash': req.query.state,
+        'discordId': user.data.id
       })
       .then(function(response) {
         res.redirect("https://www.thesubath.com/bcss/");
