@@ -3,7 +3,6 @@ using BCSSBot.Bots;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
-using BCSSBot.Database.DataAccess;
 using BCSSBot.Email;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
@@ -14,31 +13,28 @@ namespace BCSSBot
 {
     public class Program
     {
-        public delegate void WebServerWorker();
+        private Settings Settings { get; set; }
 
-        public Settings Settings { get; private set; }
-        
-        public Bot Bot;
+        private Bot _bot;
 
-        public static async Task Main(string[] args)=> await new Program().Run(args);
+        public static async Task Main(string[] args)=> await new Program().Run();
 
-        private async Task Run(string[] args)
+        private async Task Run()
         {
             Settings = Settings.GetSettings();
             
             using var emailSender = new EmailSender(Settings.EmailUsername, Settings.EmailPassword);
             
-            Bot = new Bot();
-            var callbackHolder = await Bot.RunAsync();
+            _bot = new Bot();
+            var callbackHolder = await _bot.RunAsync();
             
-            while (!Bot.IsConnected())
+            while (!_bot.IsConnected())
             {
                 continue;
             }
 
             using IHost webHost = BuildWebHost(callbackHolder);
-            await webHost.StartAsync();
-            await Task.Delay(-1);
+            await webHost.RunAsync();
             /*
             Permission[] x = { new Permission() { DiscordId = 552828506036240414, Type = PermissionType.Channel }, new Permission() { DiscordId = 523960418167816196, Type = PermissionType.Channel }, new Permission() { DiscordId = 520715386488881180, Type = PermissionType.Role }, new Permission() { DiscordId = 469269411719675935, Type = PermissionType.Role } };
             Console.WriteLine(await Bot.ModifyUser(126070623855312896, x));
@@ -59,32 +55,11 @@ namespace BCSSBot
                 .Build();
         }
 
-        private void TestDb()
-        {
-            var db = Settings.CreateContextBuilder().CreateContext();
-            /*
-            db.Users.Add(new User
-            {
-                DiscordId = 0,
-                Memberships = new List<Membership>(),
-                UserHash = 123
-            });*/
-            
-            // Console.WriteLine(db.Memberships.Count());
-            // Console.WriteLine(String.Join("\n", db.Permissions.Select(p => $"permission: {p.DiscordId}, membersips: \n {String.Join("\n", p.Memberships.Select(m => $"\tdiscordId: {m.Permission.DiscordId}, userhash: {m.User.UserHash}"))}")));
-            // Console.WriteLine(String.Join("\n", db.Memberships.Select(m => $"discordId: {m.Permission.DiscordId}, userhash: {m.User.UserHash}")));
-            // Console.WriteLine(String.Join("\n", db.Permissions.Select(p => $"permission: {p.DiscordId}, membersips: \n {String.Join("\n", p.Memberships.Select(m => $"\tdiscordId: {m.Permission.DiscordId}, userhash: {m.User.UserHash}"))}")));
-            // Console.WriteLine(String.Join(", ", db.Users.Select(u => u.Memberships)));
-            db.SaveChanges();
-        }
-
         public static int CreateHash(string email)
         {
-            using (MD5 md5 = MD5.Create())
-            {
-                byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes(email));
-                return BitConverter.ToInt32(hash, 0);
-            }
+            using MD5 md5 = MD5.Create();
+            byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes(email));
+            return BitConverter.ToInt32(hash, 0);
         }
     }
 }

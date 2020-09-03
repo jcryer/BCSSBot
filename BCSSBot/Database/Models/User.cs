@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BCSSBot.Database.Models;
 
 namespace BCSSBot.API.Models
 {
@@ -10,9 +11,12 @@ namespace BCSSBot.API.Models
         [Key]
         [Column("user_hash")]
         public int UserHash { get; set; }
+        
+        // Will be null before user connects
         [Column("discord_id")]
         public ulong? DiscordId { get; set; }
 
+        // Will be null after email has been connected
         [Column("email")] 
         public string Email { get; set; }
 

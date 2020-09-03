@@ -135,3 +135,4 @@ dist
 /.vs/BCSSBot/v16/Server/sqlite3/storage.ide-wal
 *.v2
 .vs/BCSSBot/v16/.suo
+/.idea/

@@ -1,9 +1,10 @@
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BCSSBot.API.Models;
+using Newtonsoft.Json;
 
-namespace BCSSBot.API.Models
+namespace BCSSBot.Database.Models
 {
     public class Permission
     {
@@ -20,11 +21,13 @@ namespace BCSSBot.API.Models
         
         public virtual ICollection<Membership> Memberships { get; }
 
+        // Converts JSON blob to Object
         public PermissionBlob GetPermissionBlob()
         {
             return JsonConvert.DeserializeObject<PermissionBlob>(this.JsonBlob);
         }
 
+        // Converts object to JSON blob
         public void SetPermissionBlob(PermissionBlob permissions)
         {
             this.JsonBlob = JsonConvert.SerializeObject(permissions);

@@ -123,14 +123,6 @@ ALTER TABLE ONLY public.permissions
 
 
 --
--- Name: users users_discord_id_key; Type: CONSTRAINT; Schema: public; Owner: bcss
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_discord_id_key UNIQUE (discord_id);
-
-
---
 -- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: bcss
 --
 

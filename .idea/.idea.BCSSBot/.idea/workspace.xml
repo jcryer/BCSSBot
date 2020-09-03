@@ -27,13 +27,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f1a9f5f5-455a-48a8-a017-9e0e6d7eb941" name="Default Changelist" comment="Added WebServerApi on its own worker thread">
-      <change afterPath="$PROJECT_DIR$/BCSSBot/Assets/6a4941269d62fb1ed3a9b8007fa8ed4c.webp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BCSSBot/TestEmail.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.BCSSBot/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BCSSBot/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.BCSSBot/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BCSSBot/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BCSSBot/Email/Email.html" beforeDir="false" afterPath="$PROJECT_DIR$/BCSSBot/Email/Email.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BCSSBot/Email/EmailSender.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BCSSBot/Email/EmailSender.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/schema.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +52,6 @@
     <setting file="file://$PROJECT_DIR$/BCSSBot/Database/DataAccess/PostgresSqlContext.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/BCSSBot/Database/Models/Membership.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/BCSSBot/API/Models/UserUpdate.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/BCSSBot/TestEmail.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/BCSSBot/API/Startup.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/BCSSBot/bin/Debug/netcoreapp3.1/settings.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/BCSSBot/Program.cs" root0="FORCE_HIGHLIGHTING" />
@@ -65,6 +59,7 @@
     <setting file="file://$PROJECT_DIR$/BCSSBot/CallbackHolder.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/BCSSBot/API/Controllers/UserController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/BCSSBot/Database/Models/User.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BCSSBot/TestEmail.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/BCSSBot/Settings.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/BCSSBot/Database/DataAccess/DatabaseContextBuilder.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -100,10 +95,10 @@
         <option value="$PROJECT_DIR$/BCSSBot/Database/Models/User.cs" />
         <option value="$PROJECT_DIR$/BCSSBot/Program.cs" />
         <option value="$PROJECT_DIR$/BCSSBot/API/Controllers/UserController.cs" />
-        <option value="$PROJECT_DIR$/BCSSBot/Email/EmailSender.cs" />
         <option value="$PROJECT_DIR$/BCSSBot/bin/Debug/netcoreapp3.1/Email/Email.html" />
         <option value="$PROJECT_DIR$/BCSSBot/TestEmail.cs" />
         <option value="$PROJECT_DIR$/BCSSBot/Email/Email.html" />
+        <option value="$PROJECT_DIR$/BCSSBot/Email/EmailSender.cs" />
       </list>
     </option>
   </component>
