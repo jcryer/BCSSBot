@@ -11,7 +11,7 @@ Please contact <a href='mailto:jjc82@bath.ac.uk'>Joseph Cryer</a> or <a href='ma
 router.get('/', async function(req, res) {
   
   axios.post('https://discord.com/api/oauth2/token', 
-  `client_id=${"749611213406732370"}&client_secret=${"zTlQslYb63TTnfMRLlfBOSplsI3nlYby"}&grant_type=authorization_code&code=${req.query.code}&redirect_uri=http://bcss-su.herokuapp.com&scope=identify`  
+  `client_id=${"749611213406732370"}&client_secret=${"zTlQslYb63TTnfMRLlfBOSplsI3nlYby"}&grant_type=authorization_code&code=${req.query.code}&redirect_uri=https://bcss-su.herokuapp.com&scope=identify`  
   )
   .then(function (oAuthResponse) {
     axios.get('https://discord.com/api/users/@me', { 'headers': {'Authorization': 'Bearer ' + oAuthResponse.data.access_token} })
