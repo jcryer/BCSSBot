@@ -14,7 +14,7 @@ namespace BCSSBot.Bots
     public class Bot
     {
         private readonly DiscordClient Discord;
-        private readonly CommandsNextExtension CommandsService;
+        private readonly CommandsNextExtension CommandService;
         private bool Connected;
 
         public Bot()
@@ -33,28 +33,27 @@ namespace BCSSBot.Bots
             Discord = new DiscordClient(discordConfig);
 
             Discord.GuildAvailable += Discord_GuildAvailable;
-            Discord.SocketErrored += Discord_SocketError;
-            Discord.SocketClosed += Discord_SocketClosed;
             Discord.GuildMemberAdded += Discord_GuildMemberAdded;
 
-            CommandsService = Discord.UseCommandsNext(commandsConfig);
-            CommandsService.CommandErrored += CommandsService_CommandErrored;
+            CommandService = Discord.UseCommandsNext(commandsConfig);
+            CommandService.CommandErrored += CommandsService_CommandErrored;
 
-            CommandsService.RegisterCommands(typeof(Commands));
-        }
-
-        private async Task CommandsService_CommandErrored(CommandErrorEventArgs e)
-        {
-            Console.WriteLine(e.Exception);
-            await Task.Delay(0);
+            CommandService.RegisterCommands(typeof(Commands));
+            CommandService.RegisterCommands(typeof(PeerCommands));
         }
 
         public async Task<CallbackHolder> RunAsync()
         {
             await Discord.ConnectAsync();
 
-            var holder = new CallbackHolder(async (id, perms) => { await ModifyUser(id, perms, Discord); });
+            var holder = new CallbackHolder(async (id, perms) => { await AddUserPermissions(id, perms, Discord); });
             return await Task.FromResult(holder);
+        }
+
+        private async Task CommandsService_CommandErrored(CommandErrorEventArgs e)
+        {
+            Console.WriteLine(e.Exception);
+            await Task.Delay(0);
         }
 
         private async Task Discord_GuildAvailable(GuildCreateEventArgs e)
@@ -68,18 +67,6 @@ namespace BCSSBot.Bots
             await Task.Delay(0);
         }
 
-        private async Task Discord_SocketError(SocketErrorEventArgs e)
-        {
-            Console.WriteLine("Socket error");
-            await Task.Delay(0);
-        }
-
-        private async Task Discord_SocketClosed(SocketCloseEventArgs e)
-        {
-            Console.WriteLine("Socket closed");
-            await Task.Delay(0);
-        }
-
         private async Task Discord_GuildMemberAdded(GuildMemberAddEventArgs e)
         {
             var db = Settings.GetSettings().CreateContextBuilder().CreateContext();
@@ -89,12 +76,12 @@ namespace BCSSBot.Bots
 
             if (user != null)
             {
-                await ModifyUser(e.Guild, e.Member, permissions);
+                await AddUserPermissions(e.Guild, e.Member, permissions);
             }
             await db.SaveChangesAsync();
         }
 
-        public static async Task<bool> ModifyUser(ulong userId, Permission[] permissions, DiscordClient discord)
+        public static async Task<bool> AddUserPermissions(ulong userId, Permission[] permissions, DiscordClient discord)
         {
             try
             {
@@ -104,7 +91,7 @@ namespace BCSSBot.Bots
                 if (member == null)
                     return false;
 
-                await ModifyUser(guild, member, permissions);
+                await AddUserPermissions(guild, member, permissions);
                 return true;
             }
             catch (Exception)
@@ -113,7 +100,69 @@ namespace BCSSBot.Bots
             }
         }
 
-        public static async Task ModifyUser(DiscordGuild guild, DiscordMember member, Permission[] permissions)
+        public static async Task AddUserPermissions(DiscordGuild guild, DiscordMember member, Permission[] permissions)
+        {
+            List<string> roles = new List<string>();
+            List<string> channels = new List<string>();
+            foreach (var permissionSet in permissions)
+            {
+                var permissionObj = permissionSet.GetPermissionBlob();
+                foreach (var item in permissionObj.Items)
+                {
+                    if (item.Type == PermissionType.Channel)
+                    {
+                        var channel = guild.Channels[item.DiscordId];
+                        await channel.AddOverwriteAsync(member, Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory);
+                        await channel.SendMessageAsync(member.Mention + " has joined the channel!");
+                        channels.Add(channel.Name);
+                    }
+                    else if (item.Type == PermissionType.Role)
+                    {
+                        var role = guild.Roles[item.DiscordId];
+                        await member.GrantRoleAsync(role);
+                        roles.Add(role.Name);
+                    }
+                }
+            }
+
+            try
+            {
+                string message = "";
+                if (roles.Count > 0)
+                {
+                    message += $"You have been given the roles: \n```\n{string.Join("\n", roles)}\n```\n";
+                }
+                if (channels.Count > 0)
+                {
+                    message += $"You now have access to the channels: \n```\n{string.Join("\n", channels)}\n```";
+                }
+                await member.SendMessageAsync(message);
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
+        public static async Task<bool> RemoveUserPermissions(ulong userId, Permission[] permissions, DiscordClient discord)
+        {
+            try
+            {
+                DiscordGuild guild = await discord.GetGuildAsync(Settings.GetSettings().DiscordServer);
+                DiscordMember member = await guild.GetMemberAsync(userId);
+
+                if (member == null)
+                    return false;
+
+                await RemoveUserPermissions(guild, member, permissions);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static async Task RemoveUserPermissions(DiscordGuild guild, DiscordMember member, Permission[] permissions)
         {
             foreach (var permissionSet in permissions)
             {
@@ -122,11 +171,19 @@ namespace BCSSBot.Bots
                 {
                     if (item.Type == PermissionType.Channel)
                     {
-                        await guild.Channels[item.DiscordId].AddOverwriteAsync(member, Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory);
+                        var overwrites = guild.Channels[item.DiscordId].PermissionOverwrites;
+                        foreach (var overwrite in overwrites)
+                        {
+                            if (member == await overwrite.GetMemberAsync() && overwrite.CheckPermission(Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory) == PermissionLevel.Allowed)
+                            {
+                                await overwrite.DeleteAsync();
+                                break;
+                            }
+                        }
                     }
                     else if (item.Type == PermissionType.Role)
                     {
-                        await member.GrantRoleAsync(guild.Roles[item.DiscordId]);
+                        await member.RevokeRoleAsync(guild.Roles[item.DiscordId]);
                     }
                 }
             }
