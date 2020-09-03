@@ -133,3 +133,4 @@ dist
 /.vs/BCSSBot/v16/Server/sqlite3/storage.ide
 /.vs/BCSSBot/v16/Server/sqlite3/storage.ide-shm
 /.vs/BCSSBot/v16/Server/sqlite3/storage.ide-wal
+/.idea/

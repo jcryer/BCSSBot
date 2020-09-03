@@ -20,11 +20,13 @@ namespace BCSSBot.API.Models
         
         public virtual ICollection<Membership> Memberships { get; }
 
+        // Converts JSON blob to Object
         public PermissionBlob GetPermissionBlob()
         {
             return JsonConvert.DeserializeObject<PermissionBlob>(this.JsonBlob);
         }
 
+        // Converts object to JSON blob
         public void SetPermissionBlob(PermissionBlob permissions)
         {
             this.JsonBlob = JsonConvert.SerializeObject(permissions);
