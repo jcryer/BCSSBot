@@ -136,3 +136,5 @@ dist
 *.v2
 .vs/BCSSBot/v16/.suo
 /.idea/
+*.v2
+.vs/BCSSBot/v16/.suo

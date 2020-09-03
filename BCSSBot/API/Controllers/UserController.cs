@@ -12,11 +12,9 @@ namespace BCSSBot.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly PostgresSqlContext _db;
         private readonly CallbackHolder _callbackHolder;
         public UserController(CallbackHolder callbackHolder)
         {
-            _db = Settings.GetSettings().BuildContext();
             _callbackHolder = callbackHolder;
         }
 
@@ -25,6 +23,8 @@ namespace BCSSBot.API.Controllers
         [HttpPut]
         public async Task<IActionResult> PutUser([FromBody] UserUpdate userUpdate)
         {
+            var db = Settings.GetSettings().BuildContext();
+
             Console.WriteLine($"PUT REQUEST {{User:\n" +
                              $"userHash: {userUpdate.UserHash}\n" +
                              $"discordId: {userUpdate.DiscordId}}}");
@@ -36,7 +36,7 @@ namespace BCSSBot.API.Controllers
                 return BadRequest();
             }
             
-            var user = _db.Users.FirstOrDefault(u => u.UserHash == userUpdate.UserHash);
+            var user = db.Users.FirstOrDefault(u => u.UserHash == int.Parse(userUpdate.UserHash));
 
             // If the user cant be found then return a bad request
             if (user == null)
@@ -45,15 +45,16 @@ namespace BCSSBot.API.Controllers
                 return BadRequest();
             }
                 
-            var permissions = _db.Users.Where(x => x.UserHash == userUpdate.UserHash)?.SelectMany(x => x.Memberships)?.Select(x => x.Permission)?.ToArray();
+            var permissions = db.Users.Where(x => x.UserHash == int.Parse(userUpdate.UserHash))?.SelectMany(x => x.Memberships)?.Select(x => x.Permission)?.ToArray();
                     
-            user.DiscordId = userUpdate.DiscordId;
+            user.DiscordId = ulong.Parse(userUpdate.DiscordId);
             user.Email = "";
 
-            _callbackHolder.Callback(userUpdate.DiscordId, permissions ?? new Permission[0]);
+            _callbackHolder.Callback(ulong.Parse(userUpdate.DiscordId), permissions ?? new Permission[0]);
 
-            _db.Users.Update(user);
-            await _db.SaveChangesAsync();
+            db.Users.Update(user);
+            await db.SaveChangesAsync();
+            await db.DisposeAsync();
             return Ok();
         }
     }

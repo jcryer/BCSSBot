@@ -80,6 +80,7 @@ namespace BCSSBot.Bots
                 await AddUserPermissions(e.Guild, e.Member, permissions);
             }
             await db.SaveChangesAsync();
+            await db.DisposeAsync();
         }
 
         public static async Task<bool> AddUserPermissions(ulong userId, Permission[] permissions, DiscordClient discord)
@@ -113,8 +114,12 @@ namespace BCSSBot.Bots
                     if (item.Type == PermissionType.Channel)
                     {
                         var channel = guild.Channels[item.DiscordId];
+
                         await channel.AddOverwriteAsync(member, Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory);
-                        await channel.SendMessageAsync(member.Mention + " has joined the channel!");
+
+                        if (channel.Type == ChannelType.Text)
+                            await channel.SendMessageAsync(member.Mention + " has joined the channel!");
+
                         channels.Add(channel.Name);
                     }
                     else if (item.Type == PermissionType.Role)

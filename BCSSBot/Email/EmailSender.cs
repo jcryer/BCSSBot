@@ -22,6 +22,7 @@ namespace BCSSBot.Email
         public EmailSender(string username, string password)
         {
             _smtpClient = new SmtpClient();
+            
             _username = username;
             _password = password;
         }
@@ -29,7 +30,7 @@ namespace BCSSBot.Email
         // Opens an smtp connection and sends a single email
         public void SendEmail(string recipient, string link)
         {
-            _smtpClient.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+            _smtpClient.Connect("smtp.gmail.com", 25);
             _smtpClient.Authenticate(_username, _password);
             var email = new MimeMessage()
             {
@@ -46,8 +47,10 @@ namespace BCSSBot.Email
         // recipients and links arrays need to be the same length
         public void SendEmails(string[] recipients, string[] links)
         {
-            _smtpClient.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+            _smtpClient.Connect("smtp.gmail.com", 587, SecureSocketOptions.Auto);
+
             _smtpClient.Authenticate(_username, _password);
+
             for (int i = 0; i < recipients.Length; i++)
             {
                 var email = new MimeMessage()
@@ -57,11 +60,15 @@ namespace BCSSBot.Email
                     Subject = Subject,
                     Body = BuildBody(links[i])
                 };
+
                 _smtpClient.Send(email);
+
             }
+
             _smtpClient.Disconnect(true);
+
         }
-        
+
         // Cleans up the connections to not leave resources, pretty redundetnt
         public void Dispose()
         {
