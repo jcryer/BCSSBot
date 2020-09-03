@@ -5,11 +5,14 @@ namespace BCSSBot.Database.DataAccess
 {
     public class PostgresSqlContext : DbContext
     {
+        // Database tables
         public DbSet<User> Users { get; set; }
         public DbSet<Permission> Permissions { get; set; } 
         public DbSet<Membership> Memberships { get; set; }
         
         private string ConnectionString { get; }
+        
+        
         public PostgresSqlContext(string connectionString)
         {
             ConnectionString = connectionString;
@@ -22,11 +25,13 @@ namespace BCSSBot.Database.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Set up tables
             modelBuilder.Entity<User>().ToTable("users");
             modelBuilder.Entity<Permission>().ToTable("permissions");
             modelBuilder.Entity<Membership>().ToTable("memberships")
                 .HasKey(m => new {userHash = m.UserHash, discordId = m.Id});
 
+            // Set up many to many relationship
             modelBuilder.Entity<Membership>()
                 .HasOne(m => m.User)
                 .WithMany(u => u.Memberships)
@@ -36,12 +41,6 @@ namespace BCSSBot.Database.DataAccess
                 .HasOne(m => m.Permission)
                 .WithMany(p => p.Memberships)
                 .HasForeignKey(m => m.Id);
-        }
-
-        public override int SaveChanges()
-        {
-            ChangeTracker.DetectChanges();
-            return base.SaveChanges();
         }
     }
 }

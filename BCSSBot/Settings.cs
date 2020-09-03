@@ -85,8 +85,19 @@ namespace BCSSBot.API
                 Password = this.DbPassword
             }.ConnectionString;
         }
-        
-        public DatabaseContextBuilder CreateContextBuilder() => 
-            new DatabaseContextBuilder(this.BuildConnectionString());
+
+        public PostgresSqlContext BuildContext()
+        {
+            try
+            { 
+                return new PostgresSqlContext(BuildConnectionString());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error setting up database.");
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 }

@@ -55,7 +55,7 @@ namespace BCSSBot.Bots
 
         public async Task AddPeerGroupToDb(string groupName, ulong textId, ulong voiceId)
         {
-            var _db = Settings.GetSettings().CreateContextBuilder().CreateContext();
+            var _db = Settings.GetSettings().BuildContext();
 
             var perm = new Permission()
             {
@@ -83,7 +83,7 @@ namespace BCSSBot.Bots
                 return;
             }
 
-            var db = Settings.GetSettings().CreateContextBuilder().CreateContext();
+            var db = Settings.GetSettings().BuildContext();
 
             var permissions = db.Permissions.Where(x => x.Name.StartsWith("peer-group-"));
 
@@ -123,7 +123,7 @@ namespace BCSSBot.Bots
         [Command("listperms"), Description("Command to list all group IDs"), RequireUserPermissions(Permissions.Administrator)]
         public async Task ListGroups(CommandContext e)
         {
-            var _db = Settings.GetSettings().CreateContextBuilder().CreateContext();
+            var _db = Settings.GetSettings().BuildContext();
 
             var groups = string.Join("\n", _db.Permissions.Select(x => x.Name));
             if (groups.Length == 0)
@@ -136,7 +136,7 @@ namespace BCSSBot.Bots
         {
             var emails = data.Split(' ').ToList();
 
-            var db = Settings.GetSettings().CreateContextBuilder().CreateContext();
+            var db = Settings.GetSettings().BuildContext();
 
             var users = emails.Select(x => new User() { Email = x, UserHash = Program.CreateHash(x) });
             await db.Users.AddRangeAsync(users);
@@ -145,7 +145,7 @@ namespace BCSSBot.Bots
             // send email
             var emailHandler = new EmailSender(settings.EmailUsername, settings.EmailPassword);            
 
-            emailHandler.SendEmails(emails.ToArray(), users.Select(x => x.UserHash.ToString()).ToArray(), users.Select(x => "hi").ToArray());
+            emailHandler.SendEmails(emails.ToArray(), users.Select(x => x.UserHash.ToString()).ToArray());
 
             await db.SaveChangesAsync();
             await e.RespondAsync("Done");
@@ -156,7 +156,7 @@ namespace BCSSBot.Bots
         {
             var emailHashes = data.Split(' ').ToList().Select(x =>  Program.CreateHash(x));
 
-            var db = Settings.GetSettings().CreateContextBuilder().CreateContext();
+            var db = Settings.GetSettings().BuildContext();
 
             var perm = db.Permissions.FirstOrDefault(x => x.Name == groupName);
 
@@ -199,7 +199,7 @@ namespace BCSSBot.Bots
 
         public async Task CreateGroup(string groupName)
         {
-            var _db = Settings.GetSettings().CreateContextBuilder().CreateContext();
+            var _db = Settings.GetSettings().BuildContext();
 
             var perm = new Permission()
             {
@@ -214,7 +214,7 @@ namespace BCSSBot.Bots
 
         public async Task AddPermissionToGroup(string groupName, ulong discordId, PermissionType type)
         {
-            var _db = Settings.GetSettings().CreateContextBuilder().CreateContext();
+            var _db = Settings.GetSettings().BuildContext();
             var perm = _db.Permissions.First(x => x.Name == groupName);
 
             var blob = perm.GetPermissionBlob();

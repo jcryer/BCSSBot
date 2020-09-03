@@ -17,7 +17,7 @@ namespace BCSSBot.API.Controllers
         private readonly CallbackHolder _callbackHolder;
         public UserController(CallbackHolder callbackHolder)
         {
-            _db = Settings.GetSettings().CreateContextBuilder().CreateContext();
+            _db = Settings.GetSettings().BuildContext();
             _callbackHolder = callbackHolder;
         }
 

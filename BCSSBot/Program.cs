@@ -3,7 +3,6 @@ using BCSSBot.Bots;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
-using BCSSBot.Database.DataAccess;
 using BCSSBot.Email;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
@@ -14,8 +13,6 @@ namespace BCSSBot
 {
     public class Program
     {
-        public delegate void WebServerWorker();
-
         public Settings Settings { get; private set; }
         
         public Bot Bot;
@@ -59,32 +56,11 @@ namespace BCSSBot
                 .Build();
         }
 
-        private void TestDb()
-        {
-            var db = Settings.CreateContextBuilder().CreateContext();
-            /*
-            db.Users.Add(new User
-            {
-                DiscordId = 0,
-                Memberships = new List<Membership>(),
-                UserHash = 123
-            });*/
-            
-            // Console.WriteLine(db.Memberships.Count());
-            // Console.WriteLine(String.Join("\n", db.Permissions.Select(p => $"permission: {p.DiscordId}, membersips: \n {String.Join("\n", p.Memberships.Select(m => $"\tdiscordId: {m.Permission.DiscordId}, userhash: {m.User.UserHash}"))}")));
-            // Console.WriteLine(String.Join("\n", db.Memberships.Select(m => $"discordId: {m.Permission.DiscordId}, userhash: {m.User.UserHash}")));
-            // Console.WriteLine(String.Join("\n", db.Permissions.Select(p => $"permission: {p.DiscordId}, membersips: \n {String.Join("\n", p.Memberships.Select(m => $"\tdiscordId: {m.Permission.DiscordId}, userhash: {m.User.UserHash}"))}")));
-            // Console.WriteLine(String.Join(", ", db.Users.Select(u => u.Memberships)));
-            db.SaveChanges();
-        }
-
         public static int CreateHash(string email)
         {
-            using (MD5 md5 = MD5.Create())
-            {
-                byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes(email));
-                return BitConverter.ToInt32(hash, 0);
-            }
+            using MD5 md5 = MD5.Create();
+            byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes(email));
+            return BitConverter.ToInt32(hash, 0);
         }
     }
 }

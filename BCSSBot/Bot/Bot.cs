@@ -82,7 +82,7 @@ namespace BCSSBot.Bots
 
         private async Task Discord_GuildMemberAdded(GuildMemberAddEventArgs e)
         {
-            var db = Settings.GetSettings().CreateContextBuilder().CreateContext();
+            var db = Settings.GetSettings().BuildContext();
 
             var user = db.Users.FirstOrDefault(x => x.DiscordId == e.Member.Id);
             var permissions = db.Users.Where(x => x.DiscordId == e.Member.Id)?.SelectMany(x => x.Memberships)?.Select(x => x.Permission)?.ToArray();
