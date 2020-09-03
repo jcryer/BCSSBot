@@ -34,8 +34,7 @@ namespace BCSSBot
             }
 
             using IHost webHost = BuildWebHost(callbackHolder);
-            await webHost.StartAsync();
-            await Task.Delay(-1);
+            await webHost.RunAsync();
             /*
             Permission[] x = { new Permission() { DiscordId = 552828506036240414, Type = PermissionType.Channel }, new Permission() { DiscordId = 523960418167816196, Type = PermissionType.Channel }, new Permission() { DiscordId = 520715386488881180, Type = PermissionType.Role }, new Permission() { DiscordId = 469269411719675935, Type = PermissionType.Role } };
             Console.WriteLine(await Bot.ModifyUser(126070623855312896, x));
