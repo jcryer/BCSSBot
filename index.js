@@ -22,7 +22,7 @@ router.get('/', async function(req, res) {
         'discordId': user.data.id
       })
       .then(function(response) {
-        res.redirect("https://discord.gg/yM4DWB");
+        res.redirect("https://discord.gg/gDYbrpK");
       })
       .catch(function(error) {
         console.log(error);
