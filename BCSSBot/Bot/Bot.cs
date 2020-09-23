@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BCSSBot.API;
 using BCSSBot.Database.Models;
+using DSharpPlus.CommandsNext.Attributes;
 
 namespace BCSSBot.Bots
 {
@@ -28,7 +29,8 @@ namespace BCSSBot.Bots
 
             var commandsConfig = new CommandsNextConfiguration
             {
-                StringPrefixes = new List<string>() { "!" }
+                StringPrefixes = new List<string>() { "?" },
+                EnableDefaultHelp = false
             };
 
             Discord = new DiscordClient(discordConfig);
@@ -115,7 +117,7 @@ namespace BCSSBot.Bots
                     {
                         var channel = guild.Channels[item.DiscordId];
 
-                        await channel.AddOverwriteAsync(member, Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory);
+                        await channel.AddOverwriteAsync(member, Permissions.AccessChannels);
 
                         if (channel.Type == ChannelType.Text)
                             await channel.SendMessageAsync(member.Mention + " has joined the channel!");
@@ -162,8 +164,9 @@ namespace BCSSBot.Bots
                 await RemoveUserPermissions(guild, member, permissions);
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                
                 return false;
             }
         }
@@ -178,9 +181,9 @@ namespace BCSSBot.Bots
                     if (item.Type == PermissionType.Channel)
                     {
                         var overwrites = guild.Channels[item.DiscordId].PermissionOverwrites;
-                        foreach (var overwrite in overwrites)
+                        foreach (var overwrite in overwrites.Where(x => x.Type == OverwriteType.Member))
                         {
-                            if (member == await overwrite.GetMemberAsync() && overwrite.CheckPermission(Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory) == PermissionLevel.Allowed)
+                            if (member == await overwrite.GetMemberAsync() && overwrite.CheckPermission(Permissions.AccessChannels) == PermissionLevel.Allowed)
                             {
                                 await overwrite.DeleteAsync();
                                 break;

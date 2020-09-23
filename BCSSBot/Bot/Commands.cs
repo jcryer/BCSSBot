@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BCSSBot.Database.Models;
 using System;
+using Newtonsoft.Json.Schema;
 
 namespace BCSSBot.Bots
 {
@@ -16,7 +17,7 @@ namespace BCSSBot.Bots
     [Description("All Peer Mentor Commands")]
     class PeerCommands : BaseCommandModule
     {
-        [Command("build"), Description("Creates a set of peer mentor channels and permissions"), RequireUserPermissions(Permissions.Administrator)]
+        [Command("build"), Description("Creates a set of peer mentor channels and permissions"), RequireOwner]
         public async Task Build(CommandContext e, [Description("The number of peer mentor groups to build")]int numGroups)
         {
             if (numGroups <= 0)
@@ -37,17 +38,30 @@ namespace BCSSBot.Bots
                 return;
             }
 
-            var textCategory = await e.Guild.CreateChannelCategoryAsync("Peer Mentors", new List<DiscordOverwriteBuilder>() { new DiscordOverwriteBuilder().Deny(Permissions.AccessChannels).For(e.Guild.EveryoneRole) });
-            var voiceCategory = await e.Guild.CreateChannelCategoryAsync("Peer Mentors", new List<DiscordOverwriteBuilder>() { new DiscordOverwriteBuilder().Deny(Permissions.AccessChannels).For(e.Guild.EveryoneRole) });
+            var textCategory = await e.Guild.CreateChannelCategoryAsync("Peer Mentors Text", new List<DiscordOverwriteBuilder>() { new DiscordOverwriteBuilder().Deny(Permissions.AccessChannels).For(e.Guild.EveryoneRole), new DiscordOverwriteBuilder().Allow(Permissions.AccessChannels).For(e.Guild.GetRole(756883420361261182)), new DiscordOverwriteBuilder().Allow(Permissions.AccessChannels).For(e.Guild.GetRole(756882637913849897)) });
+            var voiceCategory = await e.Guild.CreateChannelCategoryAsync("Peer Mentors Voice", new List<DiscordOverwriteBuilder>() { new DiscordOverwriteBuilder().Deny(Permissions.AccessChannels).For(e.Guild.EveryoneRole), new DiscordOverwriteBuilder().Allow(Permissions.AccessChannels).For(e.Guild.GetRole(756883420361261182)), new DiscordOverwriteBuilder().Allow(Permissions.AccessChannels).For(e.Guild.GetRole(756882637913849897)) });
 
             for (int i = 1; i <= numGroups; i++)
             {
                 var text = await e.Guild.CreateTextChannelAsync("group-" + i, textCategory);
-                var voice = await e.Guild.CreateVoiceChannelAsync("Group " + i, voiceCategory);
+                var voice = await e.Guild.CreateVoiceChannelAsync("group-" + i, voiceCategory);
                 await AddPeerGroupToDb("peer-group-" + i, text.Id, voice.Id);
             }
 
             await e.RespondAsync("Done!");
+        }
+
+        [Command("signuplist"), Description("Prints a list of email addresses that haven't yet signed up."), RequireOwner]
+        public async Task SignupList(CommandContext e)
+        {
+            var db = Settings.GetSettings().BuildContext();
+
+            var emails = db.Users.Where(x => x.Email != "").Select(x => x.Email);
+
+            var emailsString = string.Join("\n", emails);
+
+            await e.Member.SendMessageAsync($"Email addresses that haven't yet connected their accounts:\n\n```\n{emailsString}\n```");
+            await e.RespondAsync("Sent in DMs!");
         }
 
         public async Task AddPeerGroupToDb(string groupName, ulong textId, ulong voiceId)
@@ -72,7 +86,7 @@ namespace BCSSBot.Bots
 
         }
 
-        [Command("destroy"), Description("Deletes all peer mentor channels and permissions - **DANGER**"), RequireUserPermissions(Permissions.Administrator)]
+        [Command("destroy"), Description("Deletes all peer mentor channels and permissions - **DANGER**"), RequireOwner]
         public async Task Destroy(CommandContext e, string password = "")
         {
             if (password != Settings.GetSettings().DiscordPassword)
@@ -80,6 +94,7 @@ namespace BCSSBot.Bots
                 await e.RespondAsync("Requires the admin password.");
                 return;
             }
+            await e.Message.DeleteAsync();
 
             var db = Settings.GetSettings().BuildContext();
 
@@ -123,13 +138,13 @@ namespace BCSSBot.Bots
 
     class Commands : BaseCommandModule
     {
-        [Command("ping"), Description("Test command"), RequireUserPermissions(Permissions.Administrator)]
+        [Command("ping"), Description("Test command"), RequireOwner]
         public async Task Ping(CommandContext e)
         {
             await e.RespondAsync("Pong!");
         }
 
-        [Command("list"), Description("Lists all permissions"), RequireUserPermissions(Permissions.Administrator)]
+        [Command("list"), Description("Lists all permissions"), RequireOwner]
         public async Task List(CommandContext e)
         {
             var db = Settings.GetSettings().BuildContext();
@@ -142,7 +157,7 @@ namespace BCSSBot.Bots
 
         }
 
-        [Command("info"), Description("Lists all permission items of a given permission"), RequireUserPermissions(Permissions.Administrator)]
+        [Command("info"), Description("Lists all permission items of a given permission"), RequireOwner]
         public async Task ListGroups(CommandContext e, [Description("Name of permission (from list command)")]string permName)
         {
             var db = Settings.GetSettings().BuildContext();
@@ -165,7 +180,7 @@ namespace BCSSBot.Bots
 
         }
 
-        [Command("addusers"), Description("Adds a set of emails to the database as new users"), RequireUserPermissions(Permissions.Administrator)]
+        [Command("addusers"), Description("Adds a set of emails to the database as new users"), RequireOwner]
         public async Task AddUsers(CommandContext e, [RemainingText, Description("List of email addresses separated by spaces")]string emails)
         { 
             var emailList = emails.Split(' ').Select(x => Tuple.Create(x, Program.CreateHash(x)));
@@ -190,7 +205,21 @@ namespace BCSSBot.Bots
             await e.RespondAsync("Done");
         }
 
-        [Command("addperm"), Description("Adds a permission to a set of emails in the database."), RequireUserPermissions(Permissions.Administrator)]
+        /*
+        [Command("resend"), Description("Sends emails again"), RequireOwner]
+        public async Task Resend(CommandContext e)
+        {
+            var db = Settings.GetSettings().BuildContext();
+
+            var emails = db.Users.Where(x => x.Email != "").Select(x => x.Email);
+
+            var emailsString = string.Join("\n", emails);
+
+            await e.Member.SendMessageAsync($"Email addresses that haven't yet connected their accounts:\n\n```\n{emailsString}\n```");
+            await e.RespondAsync("Sent in DMs!");
+        }*/
+
+        [Command("addperm"), Description("Adds a permission to a set of emails in the database."), RequireOwner]
         public async Task AddPerms(CommandContext e, [Description("Name of permission (from list command)")]string permName, [RemainingText, Description("List of email addresses separated by spaces")]string emails)
         {
             var emailHashes = emails.Split(' ').Select(x => Program.CreateHash(x));
@@ -205,14 +234,18 @@ namespace BCSSBot.Bots
 
             var users = db.Users.Where(x => emailHashes.Contains(x.UserHash) && x.DiscordId != 0 && x.DiscordId != null).ToList();
 
-            users.ForEach(async x => await Bot.AddUserPermissions(x.DiscordId ?? 0, new Permission[] { perm }, e.Client));
+            var permission = new Permission[] { perm };
+            foreach (var user in users)
+            {
+                await Bot.AddUserPermissions(user.DiscordId ?? 0, permission, e.Client);
+            }
 
             await db.SaveChangesAsync();
             await db.DisposeAsync();
             await e.RespondAsync("Done");
         }
 
-        [Command("removeperm"), Description("Removes a permission from a set of emails in the database."), RequireUserPermissions(Permissions.Administrator)]
+        [Command("removeperm"), Description("Removes a permission from a set of emails in the database."), RequireOwner]
         public async Task RemovePerms(CommandContext e, [Description("Name of permission (from list command)")]string permName, [RemainingText, Description("List of email addresses separated by spaces")]string emails)
         {
             var emailHashes = emails.Split(' ').Select(x => Program.CreateHash(x));
@@ -227,7 +260,11 @@ namespace BCSSBot.Bots
 
             var users = db.Users.Where(x => emailHashes.Contains(x.UserHash) && x.DiscordId != 0 && x.DiscordId != null).ToList();
 
-            users.ForEach(async x => await Bot.RemoveUserPermissions(x.DiscordId ?? 0, new Permission[] { perm }, e.Client));
+            var permission = new Permission[] { perm };
+            foreach (var user in users)
+            {
+                await Bot.RemoveUserPermissions(user.DiscordId ?? 0, permission, e.Client);
+            }
 
             await db.SaveChangesAsync();
             await db.DisposeAsync();
@@ -236,7 +273,7 @@ namespace BCSSBot.Bots
         }
 
         // next three: test commands
-        [Command("createperm"), Description("Command to create a permission group"), RequireUserPermissions(Permissions.Administrator)]
+        [Command("createperm"), Description("Command to create a permission group"), RequireOwner]
         public async Task CreateGroup(CommandContext e, string groupName)
         {
             await CreateGroup(groupName);
@@ -244,7 +281,7 @@ namespace BCSSBot.Bots
             await e.RespondAsync("Done!");
         }
 
-        [Command("addtoperm"), Description("Command to add to a permission group"), RequireUserPermissions(Permissions.Administrator)]
+        [Command("addtoperm"), Description("Command to add to a permission group"), RequireOwner]
         public async Task AddToGroup(CommandContext e, string groupName, DiscordRole role)
         {
             await AddPermissionToGroup(groupName, role.Id, PermissionType.Role);
@@ -252,7 +289,7 @@ namespace BCSSBot.Bots
             await e.RespondAsync("Done!");
         }
 
-        [Command("addtoperm"), Description("Command to add to a permission group"), RequireUserPermissions(Permissions.Administrator)]
+        [Command("addtoperm"), Description("Command to add to a permission group"), RequireOwner]
         public async Task AddToGroup(CommandContext e, string groupName, DiscordChannel channel)
         {
             await AddPermissionToGroup(groupName, channel.Id, PermissionType.Channel);
@@ -275,7 +312,6 @@ namespace BCSSBot.Bots
             await db.DisposeAsync();
 
         }
-
 
         public async Task AddPermissionToGroup(string groupName, ulong discordId, PermissionType type)
         {
