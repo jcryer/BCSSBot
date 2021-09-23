@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ContentModelStore">
     <e p="$APPLICATION_CONFIG_DIR$/consoles/db" t="IncludeRecursive" />
-    <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.1/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.1/resharper-host/local/Transient/ReSharperHost/v201/SolutionCaches/_BCSSBot.-2136163606.00" t="ExcludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.3/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.3/resharper-host/local/Transient/Rider/v203/SolutionCaches/_BCSSBot.-2136163606.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="BCSSBot" t="IncludeRecursive">
         <e p="API" t="Include">
@@ -27,7 +28,6 @@
         <e p="CallbackHolder.cs" t="Include" />
         <e p="Database" t="Include">
           <e p="DataAccess" t="Include">
-            <e p="DatabaseContextBuilder.cs" t="Include" />
             <e p="PostgresSqlContext.cs" t="Include" />
           </e>
           <e p="Models" t="Include">
@@ -51,7 +51,7 @@
         <e p="Program.cs" t="Include" />
         <e p="schema.sql" t="Include" />
         <e p="Settings.cs" t="Include" />
-        <e p="TestEmail.cs" t="Include" />
+        <e p="settings.json" t="Include" />
       </e>
       <e p="BCSSBot.sln" t="IncludeFlat" />
       <e p="packages" t="ExcludeRecursive" />

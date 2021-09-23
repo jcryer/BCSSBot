@@ -39,7 +39,6 @@ namespace BCSSBot.Bots
             Discord.GuildMemberAdded += Discord_GuildMemberAdded;
 
             CommandService = Discord.UseCommandsNext(commandsConfig);
-            CommandService.CommandErrored += CommandsService_CommandErrored;
 
             CommandService.RegisterCommands(typeof(Commands));
             CommandService.RegisterCommands(typeof(PeerCommands));
@@ -59,7 +58,7 @@ namespace BCSSBot.Bots
             await Task.Delay(0);
         }
 
-        private async Task Discord_GuildAvailable(GuildCreateEventArgs e)
+        private async Task Discord_GuildAvailable(DiscordClient client, GuildCreateEventArgs e)
         {
             Console.WriteLine("Guild available: " + e.Guild.Name);
 
@@ -70,7 +69,7 @@ namespace BCSSBot.Bots
             await Task.Delay(0);
         }
 
-        private async Task Discord_GuildMemberAdded(GuildMemberAddEventArgs e)
+        private async Task Discord_GuildMemberAdded(DiscordClient client, GuildMemberAddEventArgs e)
         {
             var db = Settings.GetSettings().BuildContext();
 
@@ -117,7 +116,7 @@ namespace BCSSBot.Bots
                     {
                         var channel = guild.Channels[item.DiscordId];
 
-                        await channel.AddOverwriteAsync(member, Permissions.AccessChannels);
+                        await channel.AddOverwriteAsync(member, Permissions.AccessChannels | Permissions.SendMessages | Permissions.ReadMessageHistory);
 
                         if (channel.Type == ChannelType.Text)
                             await channel.SendMessageAsync(member.Mention + " has joined the channel!");
@@ -164,9 +163,8 @@ namespace BCSSBot.Bots
                 await RemoveUserPermissions(guild, member, permissions);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                
                 return false;
             }
         }

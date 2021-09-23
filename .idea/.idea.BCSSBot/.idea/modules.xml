@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/.idea.BCSSBot/.idea/.idea.BCSSBot.iml" filepath="$PROJECT_DIR$/.idea/.idea.BCSSBot/.idea/.idea.BCSSBot.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/.idea.BCSSBot/riderModule.iml" filepath="$PROJECT_DIR$/.idea/.idea.BCSSBot/riderModule.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/.idea.BCSSBot/.idea/riderModule.iml" filepath="$PROJECT_DIR$/.idea/.idea.BCSSBot/.idea/riderModule.iml" />
     </modules>
   </component>
 </project>

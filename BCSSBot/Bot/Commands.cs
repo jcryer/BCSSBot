@@ -313,6 +313,7 @@ namespace BCSSBot.Bots
 
         }
 
+
         public async Task AddPermissionToGroup(string groupName, ulong discordId, PermissionType type)
         {
             var db = Settings.GetSettings().BuildContext();
