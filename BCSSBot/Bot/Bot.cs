@@ -24,7 +24,8 @@ namespace BCSSBot.Bots
             var discordConfig = new DiscordConfiguration
             {
                 Token = Settings.GetSettings().DiscordToken,
-                TokenType = TokenType.Bot
+                TokenType = TokenType.Bot,
+                Intents = DiscordIntents.All
             };
 
             var commandsConfig = new CommandsNextConfiguration

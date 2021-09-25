@@ -81,7 +81,7 @@ namespace BCSSBot.Email
         {
             var builder = new BodyBuilder
             {
-                TextBody = $@"The BCS server need to link your discord account and email! 
+                TextBody = $@"The BCS server need to link your discord account and email.
 Click the link below to connect them and get your roles!
 {link}"
             };
