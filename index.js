@@ -5,7 +5,7 @@ url = require('url');
 router = express.Router();
 var errorText = `Sorry, something's gone wrong!<br><br>
 Please contact <a href='mailto:jjc82@bath.ac.uk'>Joseph Cryer</a> or <a href='mailto:ar2227@bath.ac.uk'>Alfie Richards</a>.<br>
-<a href='https://www.thesubath.com/bcss/'>Link to BCSS Discord.</a>.
+<a href='https://www.thesubath.com/bcss/'>Link to BCSS SU page.</a>.<br>
 `;
 
 router.get('/', async function(req, res) {
@@ -17,7 +17,7 @@ router.get('/', async function(req, res) {
     axios.get('https://discord.com/api/users/@me', { 'headers': {'Authorization': 'Bearer ' + oAuthResponse.data.access_token} })
     .then(function(user) {
       console.log(user.data.id);
-      axios.put('http://51.15.222.156:5000/api/User/', {
+      axios.put('http://bcssbot.alfierichards.com/api/User/', {
         'userHash': req.query.state,
         'discordId': user.data.id
       })
