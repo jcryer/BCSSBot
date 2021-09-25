@@ -38,8 +38,8 @@ namespace BCSSBot.Bots
                 return;
             }
 
-            var textCategory = await e.Guild.CreateChannelCategoryAsync("Peer Mentors Text", new List<DiscordOverwriteBuilder>() { new DiscordOverwriteBuilder().Deny(Permissions.AccessChannels).For(e.Guild.EveryoneRole), new DiscordOverwriteBuilder().Allow(Permissions.AccessChannels).For(e.Guild.GetRole(756883420361261182)), new DiscordOverwriteBuilder().Allow(Permissions.AccessChannels).For(e.Guild.GetRole(756882637913849897)) });
-            var voiceCategory = await e.Guild.CreateChannelCategoryAsync("Peer Mentors Voice", new List<DiscordOverwriteBuilder>() { new DiscordOverwriteBuilder().Deny(Permissions.AccessChannels).For(e.Guild.EveryoneRole), new DiscordOverwriteBuilder().Allow(Permissions.AccessChannels).For(e.Guild.GetRole(756883420361261182)), new DiscordOverwriteBuilder().Allow(Permissions.AccessChannels).For(e.Guild.GetRole(756882637913849897)) });
+            var textCategory = await e.Guild.CreateChannelCategoryAsync("Peer Mentors Text", new List<DiscordOverwriteBuilder>() { new DiscordOverwriteBuilder().Deny(Permissions.AccessChannels).For(e.Guild.EveryoneRole), /*new DiscordOverwriteBuilder().Allow(Permissions.AccessChannels).For(e.Guild.GetRole(756883420361261182)), new DiscordOverwriteBuilder().Allow(Permissions.AccessChannels).For(e.Guild.GetRole(756882637913849897))*/ });
+            var voiceCategory = await e.Guild.CreateChannelCategoryAsync("Peer Mentors Voice", new List<DiscordOverwriteBuilder>() { new DiscordOverwriteBuilder().Deny(Permissions.AccessChannels).For(e.Guild.EveryoneRole), /*new DiscordOverwriteBuilder().Allow(Permissions.AccessChannels).For(e.Guild.GetRole(756883420361261182)), new DiscordOverwriteBuilder().Allow(Permissions.AccessChannels).For(e.Guild.GetRole(756882637913849897))*/ });
 
             for (int i = 1; i <= numGroups; i++)
             {
